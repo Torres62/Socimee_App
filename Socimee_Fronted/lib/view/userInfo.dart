@@ -70,13 +70,12 @@ class UserInfo extends StatelessWidget{
 
   void  sendDeleteRequest(BuildContext context){
     url = url + idUser;
-    print(url);
     Future.delayed(Duration.zero, (){
       HttpRequest().doDelete(url).then((String idUser){
-        if(idUser.isNotEmpty){
+        if(idUser == "true"){
           Navigator.of(context).pushNamed('/home');
         } else{
-
+          
         }
       });
     });

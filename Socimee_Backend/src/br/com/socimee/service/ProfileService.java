@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.Response;
 
-import org.json.JSONArray;
-
 import br.com.socimee.controller.ProfileController;
 import br.com.socimee.model.Profile;
 

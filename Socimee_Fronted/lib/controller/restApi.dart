@@ -40,8 +40,7 @@ class HttpRequest{
   }
 
   Future<String> doDelete(String url) async{    
-    Response response = await delete(url);
-    print(response.body);
+    Response response = await delete(url);    
     return Future<String>.value(response.body);
   }
 
