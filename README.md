@@ -1,1 +1,0 @@
-# Socimee_App
