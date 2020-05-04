@@ -1,0 +1,12 @@
+# Maven build related
+*target/
+
+# Log related
+*.log
+*.lck
+
+# Legacy ones
+**.classpath
+**.project
+**.settings/
+**.factorypath
