@@ -25,23 +25,23 @@ class UserInfo extends StatelessWidget{
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,          
           children: <Widget>[
-            _buildUserConfigButton('', 'Change Email/Password', context),         
-            _buildDelAndLogoutButton('Delete User', context), 
-            _buildDelAndLogoutButton( 'Logout', context),    
+            _buildUserButton('/updateUser', 'Change Email/Password', context),         
+            _buildUserButton('/home', 'Logout', context),    
+            _buildDelButton('Delete User', context),           
           ],
         ),
       ),
     );
   }
 
-  Widget _buildUserConfigButton(String route, String buttonText, BuildContext context){
+  Widget _buildUserButton(String route, String buttonText, BuildContext context){
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
         width: 200,
         child: RaisedButton(        
           onPressed: (){
-            Navigator.of(context).pushNamed(route);
+            Navigator.of(context).pushNamed(route, arguments: idUser);
           },
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: Text(buttonText, style: TextStyle(color: Colors.white)),
@@ -51,7 +51,7 @@ class UserInfo extends StatelessWidget{
     );
   }
 
-  Widget _buildDelAndLogoutButton(String buttonText, BuildContext context){
+  Widget _buildDelButton(String buttonText, BuildContext context){
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(

@@ -49,14 +49,14 @@ public class UserService {
 		return Response.status(200).entity(users).build();
 	}
 	
-	@Path("/read")
+	@Path("/read/{id}")
 	@GET
-	@Consumes("application/json")
 	@Produces("application/json")
-	public Response readUser(User user) {
+	public Response readUser(@PathParam("id") String id) {
 		UserController controller = new UserController();
+		int idUser = Integer.parseInt(id);
 		
-		User readedUser = controller.searchByID(user.getId());
+		User readedUser = controller.searchByID(idUser);
 		
 		if(readedUser == null) {
 			return Response.status(404).entity(false).build();

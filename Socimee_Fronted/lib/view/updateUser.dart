@@ -1,25 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:socimee/controller/restApi.dart';
 
-class SignIn extends StatefulWidget{
+class UpdateUser extends StatefulWidget{
   @override
-  State<StatefulWidget> createState() => SignInState();
+  State<StatefulWidget> createState() => UpdateUserState();
 }
 
-class SignInState extends State<SignIn>{
-  
+class UpdateUserState extends State<UpdateUser>{
+
   final formKey = new GlobalKey<FormState>();
 
-  final String url = 'http://192.168.0.178:8084/Socimee/socimee/user/login';
+  final String url = 'http://192.168.0.178:8084/Socimee/socimee/user/update';
+  String urlGet = 'http://192.168.0.178:8084/Socimee/socimee/user/read/';
 
+  String idUser;
   String email;
   String password;
   Map<String, dynamic> body;
 
   @override
-  Widget build(BuildContext context) => _buildHome();
+  Widget build(BuildContext context) {    
+    idUser = ModalRoute.of(context).settings.arguments;
+    urlGet = urlGet + idUser;
+    print(urlGet);
+    Future.delayed(Duration.zero, (){
+      HttpRequest().doGet(urlGet).then((String response){
+          print(response);
+      });
+    });
 
-  void validateAndSubmit(){
+    return _buildHome();
+  }
+
+   void validateAndSubmit(){
     final form = formKey.currentState;
     if (form.validate()){
       form.save();
@@ -27,9 +40,9 @@ class SignInState extends State<SignIn>{
       body = {"email": email, "password": password}; 
 
       Future.delayed(Duration(seconds: 2), (){
-        HttpRequest().doLogin(url, body).then((String id){        
+        HttpRequest().doPut(url, body).then((String id){        
           if(id.isNotEmpty){                              
-            Navigator.of(context).pushNamed('/socimeeHome', arguments: id);
+            Navigator.of(context).pushNamed('/userInfo');
           } else{
             _returnToSignIn(); 
           }
