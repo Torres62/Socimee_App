@@ -17,12 +17,10 @@ class HttpRequest{
     return Future<bool>.value(true);
   }
 
-  Future<String> doGet(String url) async{
+  Future<Map<String, dynamic>> doGet(String url) async{
     var response = await get(url, headers: headers);
-
     var data = json.decode(response.body);
-    
-    return Future<String>.value(data);
+    return Future<Map<String, dynamic>>.value(data);
   }
 
   Future<String> doCreate(String url, Map<String, dynamic> body) async{

@@ -24,8 +24,9 @@ class UpdateUserState extends State<UpdateUser>{
     urlGet = urlGet + idUser;
     print(urlGet);
     Future.delayed(Duration.zero, (){
-      HttpRequest().doGet(urlGet).then((String response){
-          print(response);
+      HttpRequest().doGet(urlGet).then((Map<String, dynamic> response){
+          email =  response['email'];
+          password = response['password'];
       });
     });
 
@@ -78,7 +79,8 @@ class UpdateUserState extends State<UpdateUser>{
       padding: EdgeInsets.all(24),
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
-        maxLines: 1,        
+        maxLines: 1,     
+        initialValue: email,   
         decoration: InputDecoration(
           hintText: 'Email',
           icon: Icon(Icons.alternate_email, color: Colors.deepPurple),     
@@ -98,6 +100,7 @@ class UpdateUserState extends State<UpdateUser>{
         keyboardType: TextInputType.text,
         maxLength: 16,
         maxLines: 1,
+        initialValue: password,
         obscureText: true,
         decoration: InputDecoration(
           hintText: 'Password',
