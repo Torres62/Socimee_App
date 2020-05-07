@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
+import 'package:socimee/controller/restApi.dart';
 
 class SocimeeList extends StatefulWidget{
   @override
@@ -10,9 +11,17 @@ class SocimeeListState extends State<SocimeeList>{
 
   CardController controller;
   String cardPosition;
+  String idUser;
   
+  void retornaIdUser(){
+    HttpRequest().getIdUser().then((String id){
+      idUser = id;
+    });
+  }
   @override
   Widget build(BuildContext context) {
+    retornaIdUser();
+    print(idUser);
     return Scaffold(
       body: SafeArea(
         child: _buildList(),
