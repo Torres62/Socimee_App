@@ -31,7 +31,24 @@ class MyApp extends StatelessWidget {
       },
       title: 'Socimee',
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+        textTheme: Theme.of(context).textTheme.apply(
+          bodyColor: Colors.white,
+          displayColor: Colors.white
+        ),           
+        inputDecorationTheme: InputDecorationTheme(
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey)
+          ),
+          disabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey)
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey)
+          ),
+          border: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey)
+          ),
+        ),
       ),
       home: SignHome(),
     );
