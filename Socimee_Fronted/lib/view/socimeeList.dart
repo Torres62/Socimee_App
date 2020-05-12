@@ -12,15 +12,9 @@ class SocimeeListState extends State<SocimeeList>{
   CardController controller;
   String cardPosition;
   String idUser;
-  
-  void retornaIdUser(){
-    HttpRequest().getIdUser().then((String id){
-      idUser = id;
-    });
-  }
+
   @override
   Widget build(BuildContext context) {
-    retornaIdUser();
     print(idUser);
     return Scaffold(
       body: SafeArea(
