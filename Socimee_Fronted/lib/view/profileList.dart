@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:socimee/controller/restApi.dart';
 
 class SelectProfile extends StatefulWidget{
   @override
@@ -8,6 +9,7 @@ class SelectProfile extends StatefulWidget{
 class SelectProfileState extends State<SelectProfile>{
   @override
   Widget build(BuildContext context) {
+    returnLoginID();
     return Scaffold(
       body: _buildGridProfileList(),
     );
@@ -38,5 +40,9 @@ class SelectProfileState extends State<SelectProfile>{
         );
       }
     );
+  }
+
+  void returnLoginID(){
+    Future<String> id = HttpRequest().getIdUser();
   }
 }

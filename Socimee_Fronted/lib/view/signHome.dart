@@ -28,7 +28,7 @@ class SignHomeState extends State<SignHome>{
           if(id.isNotEmpty){                              
             Navigator.of(context).pushNamed('/socimeeHome', arguments: id);
           } else{
-            
+            _returnToSignIn();            
           }
         });
       });
@@ -129,7 +129,7 @@ class SignHomeState extends State<SignHome>{
 
   Widget _buildLoginButton(){
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 50, 0, 10),
+      padding: const EdgeInsets.fromLTRB(0, 50, 0, 30),
       child: Container(
         height: 40,
         child: RaisedButton(
@@ -192,5 +192,44 @@ class SignHomeState extends State<SignHome>{
         ),
       ],
     );
+  }
+
+  void _returnToSignIn(){
+    Future.delayed(Duration(seconds: 0), (){
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context){
+          return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+            title: Text(
+              'Invalid values', 
+              style: TextStyle(
+                color: ColorConverter().textBlueColor()
+              ),
+            ),
+            content: Text(
+              'Email or password invalid',
+              style: TextStyle(
+                color: ColorConverter().textBlueColor()
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: (){
+                  Navigator.pop(context); 
+                },
+                child: Text(
+                  'Try Again',
+                  style: TextStyle(
+                    color: ColorConverter().textBlueColor()
+                  ),
+                )
+              ),
+            ],
+          );
+        }
+      );
+    }); 
   }
 }

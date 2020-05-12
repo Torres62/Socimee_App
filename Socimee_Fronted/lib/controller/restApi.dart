@@ -6,7 +6,7 @@ class HttpRequest{
 
   final headers = {'Content-Type': 'application/json'};
   final encoding = Encoding.getByName('utf-8');
-  String _idUser;
+  String idUser;
 
   Future<bool> doPost(String url, Map<String, dynamic> body) async{
     String jsonBody = json.encode(body);
@@ -46,11 +46,11 @@ class HttpRequest{
   Future<String> doLogin(String url, Map<String, dynamic> body) async{
     String jsonBody = json.encode(body);
     Response response = await post(url, headers: headers, body: jsonBody, encoding: encoding);
-    _idUser = response.body;
+    idUser = response.body;
     return Future<String>.value(response.body);
   }
 
   Future<String> getIdUser(){
-    return Future<String>.value(_idUser);
+    return Future<String>.value(idUser);
   }
 }

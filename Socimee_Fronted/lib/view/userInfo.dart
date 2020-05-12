@@ -26,7 +26,7 @@ class UserInfo extends StatelessWidget{
           mainAxisSize: MainAxisSize.max,          
           children: <Widget>[
             _buildUserButton('/updateUser', 'Change Email/Password', context),         
-            _buildUserButton('/home', 'Logout', context),    
+            _buildUserButton('/signHome', 'Logout', context),    
             _buildDelButton('Delete User', context),           
           ],
         ),

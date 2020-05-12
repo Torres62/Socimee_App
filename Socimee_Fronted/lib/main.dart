@@ -5,7 +5,6 @@ import 'package:socimee/view/profileDescription.dart';
 import 'package:socimee/view/profilePersonality.dart';
 import 'package:socimee/view/profileRegister.dart';
 import 'package:socimee/view/signHome.dart';
-import 'package:socimee/view/signin.dart';
 import 'package:socimee/view/signup.dart';
 import 'package:socimee/view/updateUser.dart';
 import 'package:socimee/view/userInfo.dart';
@@ -18,8 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/home': (context) => SignHome(),
-        '/signin': (context) => SignIn(),
+        '/signHome': (context) => SignHome(),
         '/signup': (context) => SignUp(),
         '/profileRegister': (context) => ProfileRegister(),
         '/profilePersonality': (context) => ProfilePersonality(),
@@ -37,16 +35,16 @@ class MyApp extends StatelessWidget {
         ),           
         inputDecorationTheme: InputDecorationTheme(
           enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey)
+            borderSide: BorderSide(color: Colors.white)
           ),
           disabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey)
+            borderSide: BorderSide(color: Colors.white)
           ),
           focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey)
+            borderSide: BorderSide(color: Colors.white)
           ),
           border: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey)
+            borderSide: BorderSide(color: Colors.white)
           ),
         ),
       ),
