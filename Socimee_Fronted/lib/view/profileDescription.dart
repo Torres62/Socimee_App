@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:socimee/controller/restApi.dart';
+import 'package:socimee/utils/ColorConverter.dart';
 
 class ProfileDescription extends StatefulWidget{
   @override
@@ -38,8 +39,18 @@ class ProfileDescriptionState extends State<ProfileDescription>{
   Widget build(BuildContext context) {
     idProfile = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      body: SafeArea(
-        child: _buildForm(),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              ColorConverter().backgroundFirstColor(),
+              ColorConverter().backgroundSecondColor()
+            ],
+          ),
+        ),
+        child: _buildForm()
       ),
       resizeToAvoidBottomPadding: false,
     );
@@ -48,10 +59,12 @@ class ProfileDescriptionState extends State<ProfileDescription>{
   Widget _buildForm(){
     return Center(
       child: Container(
+        margin: EdgeInsets.all(8),
         child: Form(
           key: formKey,
           child: Column(  
-            mainAxisAlignment: MainAxisAlignment.center,          
+            mainAxisAlignment: MainAxisAlignment.center,  
+            crossAxisAlignment: CrossAxisAlignment.stretch,        
             children: <Widget>[      
               _buildOccupationField(),
               _buildFoodField(),
@@ -72,12 +85,13 @@ class ProfileDescriptionState extends State<ProfileDescription>{
         children: <Widget>[
           Text(
             'Type your Occupation',
-            style: TextStyle(color: Colors.deepPurple),
+            style: TextStyle(color: Colors.white),
           ),
           TextFormField(
             decoration: InputDecoration(
-              hintText: 'Occupation',
-              icon: Icon(Icons.computer, color: Colors.deepPurple),
+              labelText: 'Occupation',
+              labelStyle: TextStyle(color: Colors.white),
+              prefixIcon: Icon(Icons.computer, color: Colors.white),
             ),
             onSaved: (value){
               occupation = value;
@@ -95,12 +109,13 @@ class ProfileDescriptionState extends State<ProfileDescription>{
         children: <Widget>[
           Text(
             'Type your Favorite Food',
-            style: TextStyle(color: Colors.deepPurple),
+            style: TextStyle(color: Colors.white),
           ),
           TextFormField(
             decoration: InputDecoration(
-              hintText: 'Food',
-              icon: Icon(Icons.kitchen, color: Colors.deepPurple),
+              labelText: 'Food',
+              labelStyle: TextStyle(color: Colors.white),
+              prefixIcon: Icon(Icons.kitchen, color: Colors.white),
             ),
             onSaved: (value){
               food = value;
@@ -118,12 +133,13 @@ class ProfileDescriptionState extends State<ProfileDescription>{
         children: <Widget>[
           Text(
             'Type your Favorite Place',
-            style: TextStyle(color: Colors.deepPurple),
+            style: TextStyle(color: Colors.white),
           ),
           TextFormField(
             decoration: InputDecoration(
-              hintText: 'Place',
-              icon: Icon(Icons.landscape, color: Colors.deepPurple),
+              labelText: 'Place',
+              labelStyle: TextStyle(color: Colors.white),
+              prefixIcon: Icon(Icons.landscape, color: Colors.white),
             ),
             onSaved: (value){
               place = value;
@@ -141,11 +157,12 @@ class ProfileDescriptionState extends State<ProfileDescription>{
         children: <Widget>[
           Text(
             'Describe Yourself',
-            style: TextStyle(color: Colors.deepPurple),
+            style: TextStyle(color: Colors.white),
           ),
           TextFormField(
             decoration: InputDecoration(
-              hintText: 'Description',              
+              labelText: 'Description',      
+              labelStyle: TextStyle(color: Colors.white)        
             ),
             maxLength: 150,
             onSaved: (value){
@@ -166,7 +183,7 @@ class ProfileDescriptionState extends State<ProfileDescription>{
           validateAndSubmit();
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        color: Colors.deepPurple,
+        color: ColorConverter().backgroundFirstColor().withOpacity(0.7),
         child: Text('Confirm', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );

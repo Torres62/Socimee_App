@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:socimee/controller/restApi.dart';
+import 'package:socimee/utils/ColorConverter.dart';
 
 class ProfilePersonality extends StatefulWidget{
   @override
@@ -41,26 +42,40 @@ class ProfilePersonalityState extends State<ProfilePersonality>{
   Widget build(BuildContext context) {
     idProfile = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      body: SafeArea(
-        child: _buildForm(),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              ColorConverter().backgroundFirstColor(),
+              ColorConverter().backgroundSecondColor()
+            ],
+          ),
+        ),
+        child: _buildForm()
       ),
       resizeToAvoidBottomPadding: false,
     );
   }
 
   Widget _buildForm(){
-    return Container(     
-      child: Form(
-        key: formKey,          
-        child: Column(   
-          mainAxisAlignment: MainAxisAlignment.center, 
-          children: <Widget>[
-            _buildMovieField(),             
-            _buildMusicField(),            
-            _buildTvShowField(),            
-            _buildAnimeField(),
-            _buildConfirmationButton(),
-          ],
+    return Center(
+      child: Container(  
+        margin: EdgeInsets.all(8),   
+        child: Form(
+          key: formKey,          
+          child: Column(   
+            mainAxisAlignment: MainAxisAlignment.center, 
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              _buildMovieField(),             
+              _buildMusicField(),            
+              _buildTvShowField(),            
+              _buildAnimeField(),
+              _buildConfirmationButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -73,13 +88,13 @@ class ProfilePersonalityState extends State<ProfilePersonality>{
         children: <Widget>[
           Text(
             'Type your Favorite Movie',
-            style: TextStyle(color: Colors.deepPurple),
           ),
           TextFormField(
             maxLines: 1,
             decoration: InputDecoration(
-              icon: Icon(Icons.movie, color: Colors.deepPurple),
-              hintText: 'Movie',
+              prefixIcon: Icon(Icons.movie, color: Colors.white),
+              labelText: 'Movie',
+              labelStyle: TextStyle(color: Colors.white)
             ),
             validator: (value) => value.isEmpty ? 'Movie can\'t be empty' : null,
             onSaved: (value){
@@ -98,13 +113,14 @@ class ProfilePersonalityState extends State<ProfilePersonality>{
         children: <Widget>[
           Text(
             'Type your Favorite Music',
-            style: TextStyle(color: Colors.deepPurple),
+            style: TextStyle(color: Colors.white),
           ),
           TextFormField(
             maxLines: 1,
             decoration: InputDecoration(
-              icon: Icon(Icons.music_note, color: Colors.deepPurple),
-              hintText: 'Music',
+              prefixIcon: Icon(Icons.music_note, color: Colors.white),
+              labelText: 'Music',
+              labelStyle: TextStyle(color: Colors.white)
             ),
             validator: (value) => value.isEmpty ? 'Music can\'t be empty' : null,
             onSaved: (value){
@@ -123,13 +139,14 @@ class ProfilePersonalityState extends State<ProfilePersonality>{
         children: <Widget>[
           Text(
             'Type your Favorite TV Show',
-            style: TextStyle(color: Colors.deepPurple),
+            style: TextStyle(color: Colors.white),
           ),
           TextFormField(
             maxLines: 1,
             decoration: InputDecoration(
-              icon: Icon(Icons.tv, color: Colors.deepPurple),
-              hintText: 'TV Show',
+              prefixIcon: Icon(Icons.tv, color: Colors.white),
+              labelText: 'TV Show',
+              labelStyle: TextStyle(color: Colors.white)
             ),
             validator: (value) => value.isEmpty ? 'TV Show can\'t be empty' : null,
             onSaved: (value){
@@ -148,13 +165,14 @@ class ProfilePersonalityState extends State<ProfilePersonality>{
         children: <Widget>[
           Text(
             'Type your Favorite Anime',
-            style: TextStyle(color: Colors.deepPurple),
+            style: TextStyle(color: Colors.white),
           ),
           TextFormField(
             maxLines: 1,
             decoration: InputDecoration(
-              icon: Icon(Icons.live_tv, color: Colors.deepPurple),
-              hintText: 'Anime',
+              prefixIcon: Icon(Icons.live_tv, color: Colors.white),
+              labelText: 'Anime',
+              labelStyle: TextStyle(color: Colors.white)
             ),
             validator: (value) => value.isEmpty ? 'Anime can\'t be empty' : null,
             onSaved: (value){
@@ -173,7 +191,7 @@ class ProfilePersonalityState extends State<ProfilePersonality>{
         onPressed: (){
           validateAndSubmit();
         },
-        color: Colors.deepPurple,
+        color: ColorConverter().backgroundFirstColor().withOpacity(0.7),
         child: Text('Confirm', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),

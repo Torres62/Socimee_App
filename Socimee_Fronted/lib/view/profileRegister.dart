@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:socimee/controller/restApi.dart';
+import 'package:socimee/utils/ColorConverter.dart';
 
 class ProfileRegister extends StatefulWidget{
   @override
@@ -31,7 +32,6 @@ class ProfileRegisterState extends State<ProfileRegister>{
     if(form.validate()){
       form.save();
 
-      //body = {"id": null, "nome":  name, "sexo": sex, "dataNascimento": birthDate, "phone": phone};
       body = {"nome":  name, "sexo": sex, "dataNascimento": birthDate.toString(), "idPerfilFacebook": "1", "idUser": idUser};
 
       Future.delayed(Duration(seconds: 2), (){
@@ -46,7 +46,17 @@ class ProfileRegisterState extends State<ProfileRegister>{
 
   Widget _buildProfile(){
     return Scaffold(
-      body: SafeArea(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              ColorConverter().backgroundFirstColor(),
+              ColorConverter().backgroundSecondColor()
+            ],
+          ),
+        ),
         child: _buildForm(),
       ),
       resizeToAvoidBottomPadding: false,
@@ -55,15 +65,15 @@ class ProfileRegisterState extends State<ProfileRegister>{
 
   Widget _buildForm(){
     return Center(
-      child: Form(
-        key: formKey,
-        child: Container(          
-          margin: EdgeInsets.fromLTRB(30, 0, 30, 0),
+      child: Container(
+        margin: EdgeInsets.all(32),
+        child: Form(
+          key: formKey,
           child: Column(     
-            mainAxisAlignment: MainAxisAlignment.center,                          
+            mainAxisAlignment: MainAxisAlignment.center,    
+            crossAxisAlignment: CrossAxisAlignment.stretch,                      
             children: <Widget>[
               _buildNameField(),
-              _buildPhoneField(),
               _buildSexField(),            
               _buildBirthField(),            
               _buildConfirmationButton(),
@@ -80,31 +90,14 @@ class ProfileRegisterState extends State<ProfileRegister>{
        child: TextFormField(
         maxLines: 1,
         decoration: InputDecoration(
-          hintText: 'Name',
-          icon: Icon(Icons.person, color: Colors.deepPurple),
+          labelText: 'Name',
+          labelStyle: TextStyle(color: Colors.white),
+          prefixIcon: Icon(Icons.person, color: Colors.white),
         ),
         validator: (value) => value.isEmpty ? 'Name can\'t be empty' : null,
         onSaved: (value){
           name = value;
         },
-       ),
-     );
-  }
-
-  Widget _buildPhoneField(){
-     return Container(
-       margin: EdgeInsets.fromLTRB(0, 0, 0, 30),
-       child: TextFormField(
-         maxLines: 1,
-         keyboardType: TextInputType.number,
-         decoration: InputDecoration(
-           hintText: 'Phone Number',
-           icon: Icon(Icons.phone, color: Colors.deepPurple),
-         ),
-         validator: (value) => value.isEmpty ? 'Phone Number can\'t be empty' : null,
-         onSaved: (value){
-           phone = value;
-         },
        ),
      );
   }
@@ -123,6 +116,9 @@ class ProfileRegisterState extends State<ProfileRegister>{
       child: ListTile(
         title: Text(sexName),
         leading: Radio(
+          activeColor: Colors.white,
+          hoverColor: Colors.white,
+          focusColor: Colors.white,
           value: sexValue, 
           groupValue: sex, 
           onChanged: (String value){
@@ -144,7 +140,7 @@ class ProfileRegisterState extends State<ProfileRegister>{
         onPressed: (){
           _selectDate(context);
         },
-        color: Colors.deepPurple,        
+        color: ColorConverter().backgroundFirstColor().withOpacity(0.7),        
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Text('Select Date of Birth', style: TextStyle(color: Colors.white),),        
       ),
@@ -160,7 +156,7 @@ class ProfileRegisterState extends State<ProfileRegister>{
         onPressed: (){
           valideAndSubmit();
         },
-        color: Colors.deepPurple,
+        color: ColorConverter().backgroundFirstColor().withOpacity(0.7),
         child: Text('Confirm', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
