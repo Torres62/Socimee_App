@@ -56,7 +56,7 @@ class SignHomeState extends State<SignHome>{
       ),             
       child: Center(
         child: Container(
-          margin: EdgeInsets.all(32),
+          margin: EdgeInsets.all(24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -138,29 +138,13 @@ class SignHomeState extends State<SignHome>{
             _validateAndSubmit();
           },
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80)),
-          color: Colors.transparent,
-          child: Ink(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              gradient: LinearGradient(
-                begin: Alignment.bottomLeft,
-                end: Alignment.topRight,
-                colors: [
-                  ColorConverter().backgroundSecondColor(),
-                  ColorConverter().backgroundFirstColor(),
-                ],
-              ),
-            ),
-            child: Container(
-              alignment: Alignment.center,
-              child: Text(
-                'Log In',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold
-                ),
-              ),
+          color: ColorConverter().backgroundFirstColor().withOpacity(0.7),
+          child: Text(
+            'Log In',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+              fontWeight: FontWeight.bold
             ),
           ),
         ),

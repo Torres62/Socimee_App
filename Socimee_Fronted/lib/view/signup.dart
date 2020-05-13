@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:socimee/controller/restApi.dart';
+import 'package:socimee/utils/ColorConverter.dart';
 
 class SignUp extends StatefulWidget{
   @override
@@ -39,55 +40,70 @@ class SignUpState extends State<SignUp>{
 
   Widget _buildHome(){
     return Scaffold(
-      body: SafeArea(
-        child: _buildForm(),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              ColorConverter().backgroundFirstColor(),
+              ColorConverter().backgroundSecondColor()
+            ],
+          ),
+        ),
+        child: _buildForm()
       ),
     );
   }
 
   Widget _buildForm(){
-    return Form(      
-      key: formKey,    
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          _buildEmailField(),
-          _buildPasswordField(),
-          _buildSubmitButton(),
-        ],
-      )
+    return Center(
+      child: Container(
+        margin: EdgeInsets.all(32),
+        child: Form(      
+          key: formKey,    
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,        
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              _buildEmailField(),
+              _buildPasswordField(),
+              _buildSubmitButton(),
+            ],
+          )
+        ),
+      ),
     );
   }
 
   Widget _buildEmailField(){
-    return  Padding(
-      padding: EdgeInsets.all(24),
-      child: TextFormField(
-        keyboardType: TextInputType.emailAddress,
-        maxLines: 1,
-        decoration: InputDecoration(
-          hintText: 'Email',
-          icon: Icon(Icons.alternate_email, color: Colors.deepPurple),     
-        ),
-        validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
-        onSaved: (value){
-          email = value;
-        },        
+    return  TextFormField(
+      keyboardType: TextInputType.emailAddress,
+      maxLines: 1,
+      decoration: InputDecoration(
+        labelText: 'Email',
+        labelStyle: TextStyle(color: Colors.white),
+        prefixIcon: Icon(Icons.alternate_email, color: Colors.white),     
       ),
+      validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
+      onSaved: (value){
+        email = value;
+      },        
     );
   }
 
   Widget _buildPasswordField(){
     return Padding(
-      padding: EdgeInsets.all(24),
+      padding: const EdgeInsets.fromLTRB(0, 24, 0, 32),
       child: TextFormField( 
         keyboardType: TextInputType.text,
         maxLength: 16,
         maxLines: 1,
         obscureText: true,
         decoration: InputDecoration(
-          hintText: 'Password',
-          icon: Icon(Icons.lock, color: Colors.deepPurple),
+          labelText: 'Password',
+          labelStyle: TextStyle(color: Colors.white),
+          prefixIcon: Icon(Icons.lock, color: Colors.white),
         ),
         validator: (value) => value.isEmpty ? 'Password can\'t be empty' : null,
         onSaved: (value){
@@ -98,26 +114,19 @@ class SignUpState extends State<SignUp>{
   }
 
   Widget _buildSubmitButton(){
-    return Padding(
-      padding: EdgeInsets.all(16),
-      child: Container(          
-        width: 160,
-        height: 40,
-        child: RaisedButton(
-          onPressed: (){
-            showDialog(
-              context: context,
-              builder: (BuildContext context){
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            );
-            validateAndSubmit();
-          },
-          color: Colors.deepPurple,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Text('Sign Up', style: TextStyle(color: Colors.white)),    
+    return Container(          
+      height: 40,
+      child: RaisedButton(
+        onPressed: (){            
+          validateAndSubmit();
+        },
+        color: ColorConverter().backgroundFirstColor().withOpacity(0.7),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Text(
+          'Signup',
+          style: TextStyle(
+            color: Colors.white
+          ),
         ),
       ),
     );      
