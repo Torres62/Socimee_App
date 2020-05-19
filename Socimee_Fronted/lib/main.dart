@@ -7,7 +7,6 @@ import 'package:socimee/view/profilePersonality.dart';
 import 'package:socimee/view/profileRegister.dart';
 import 'package:socimee/view/signHome.dart';
 import 'package:socimee/view/signup.dart';
-import 'package:socimee/view/updateUser.dart';
 import 'package:socimee/view/userInfo.dart';
 
 void main() => runApp(MyApp());
