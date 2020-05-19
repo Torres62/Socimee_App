@@ -52,7 +52,7 @@ class SignHomeState extends State<SignHome>{
             ColorConverter().backgroundFirstColor(),
             ColorConverter().backgroundSecondColor()
           ],
-        )
+        ),
       ),             
       child: Center(
         child: Container(

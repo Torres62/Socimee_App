@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:socimee/view/home.dart';
 import 'package:socimee/view/profileConfiguration.dart';
 import 'package:socimee/view/profileDescription.dart';
+import 'package:socimee/view/profileList.dart';
 import 'package:socimee/view/profilePersonality.dart';
 import 'package:socimee/view/profileRegister.dart';
 import 'package:socimee/view/signHome.dart';
@@ -24,8 +25,9 @@ class MyApp extends StatelessWidget {
         '/profileDescription': (context) => ProfileDescription(),
         '/socimeeHome': (context) => Home(),
         '/profileConfiguration': (context) => ProfileConfiguration(),
-        '/userInfo': (context) => UserInfo(),
+        '/userInfo': (context) => AccountSettings(),
         '/updateUser': (context) => UpdateUser(),
+        '/profilesList': (context) => SelectProfile()
       },
       title: 'Socimee',
       theme: ThemeData(

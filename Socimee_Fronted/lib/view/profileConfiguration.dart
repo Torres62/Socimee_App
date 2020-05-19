@@ -8,6 +8,10 @@ class ProfileConfiguration extends StatefulWidget{
 class ProfileConfigurationState extends State<ProfileConfiguration>{
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        
+      ),
+    );
   }
 }

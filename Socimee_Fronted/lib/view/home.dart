@@ -1,90 +1,202 @@
 import 'package:flutter/material.dart';
-import 'package:socimee/view/chatList.dart';
-import 'package:socimee/view/profileList.dart';
-import 'package:socimee/view/socimeeList.dart';
-import 'package:socimee/view/userInfo.dart';
+import 'package:flutter_tindercard/flutter_tindercard.dart';
+import 'package:socimee/utils/ColorConverter.dart';
 
 class Home extends StatefulWidget{
   @override
   State<StatefulWidget> createState() => HomeState();
 }
 
-class HomeState extends State<Home>{
-
-  int _selectedBottomBar = 0;
-  
+class HomeState extends State<Home>{  
   String idProfile;
   String idUser;
 
-  List<Widget> _children() => [
-    SelectProfile(),
-    SocimeeList(),
-    ChatList(),  
-  ];
+  CardController controller;
+  String cardPosition;
 
   @override
   Widget build(BuildContext context) {
     idUser = ModalRoute.of(context).settings.arguments;
-    final List<Widget> children = _children();
 
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         body: SafeArea(
-          child: children[_selectedBottomBar],
+          child: _buildSocimeeList(),
         ),
-        bottomNavigationBar: _buildBottomNavigationBar(),
         appBar: _buildAppBar(),
+        drawer: _buildDrawer(),
       ),
     );
   }
 
-  void _onItemTapped(int index){
-    setState(() {
-      _selectedBottomBar = index;
-    });
-  }
-
-  Widget _buildBottomNavigationBar(){
-    return BottomNavigationBar(
-      backgroundColor: Colors.deepPurple,
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.people, color: Colors.white),
-          title: Text('Profiles', style: TextStyle(color: Colors.white)),
+  Widget _buildSocimeeList(){
+    return  Center(
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.6,
+        child: TinderSwapCard(                  
+          orientation: AmassOrientation.BOTTOM,
+          totalNum: 6,
+          stackNum: 3,
+          swipeEdge: 4.0,
+          maxWidth: MediaQuery.of(context).size.width * 0.9,
+          maxHeight: MediaQuery.of(context).size.width * 0.9,
+          minWidth: MediaQuery.of(context).size.width * 0.8,
+          minHeight: MediaQuery.of(context).size.width * 0.8,
+          cardBuilder: (context, index) {
+            return Card(
+              color: ColorConverter().textGreyColor(),
+              child: Text('Rafa'),
+            );
+          },
+          cardController: controller = CardController(),
+          swipeUpdateCallback:
+              (DragUpdateDetails details, Alignment align) {
+            /// Get swiping card's alignment
+            if (align.x < 0) {
+              //Card is LEFT swiping
+              cardPosition = 'Left';
+            } else if (align.x > 0) {
+              //Card is RIGHT swiping
+              cardPosition = 'Right';
+            }
+          },
+          swipeCompleteCallback:
+              (CardSwipeOrientation orientation, int index) {
+                print(cardPosition);
+            /// Get orientation & index of swiped card!
+          },
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home, color: Colors.white),    
-          title: Text('Home', style: TextStyle(color: Colors.white)),
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.chat, color: Colors.white),
-          title: Text('Chat', style: TextStyle(color: Colors.white))
-        ),
-      ],
-      currentIndex: _selectedBottomBar,
-      onTap: _onItemTapped,
+      ),
     );
   }
 
-  Widget _buildAppBar(){
-    return AppBar(
-      automaticallyImplyLeading: false,
-      title: GestureDetector(        
-        onTap: (){
-          Navigator.of(context).pushNamed('/userInfo', arguments: idUser);
-        },
-        child: Container(
-          margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
-          width: 40,
-          height: 40,
-          child: Icon(
-            Icons.person, 
-            color: Colors.white,
-            size: 40,
+  Widget _buildDrawer(){
+    return Drawer(                  
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              ColorConverter().backgroundFirstColor(),
+              ColorConverter().backgroundSecondColor()
+            ],
           ),
         ),
-      ),      
+        child: ListView(
+          children: <Widget>[
+            DrawerHeader(            
+              child: Text(
+                'Socimee',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24
+                ),
+              )
+            ),
+            _buildAccountSettings(),
+            _buildProfiles(),
+            _buildLogoutButton(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAccountSettings(){
+  return GestureDetector(
+      onTap: (){
+        Navigator.of(context).pushNamed('/userInfo', arguments: idUser);
+      },
+      child: Container(
+        child: ListTile(
+          leading: Icon(
+            Icons.person,
+            color: Colors.white,
+          ),
+          title: Text(
+            'Account',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );  
+  }
+
+  Widget _buildProfiles(){
+  return GestureDetector(
+      onTap: (){
+        Navigator.of(context).pushNamed('/profilesList');
+      },
+      child: Container(
+        child: ListTile(
+          leading: Icon(
+            Icons.people,
+            color: Colors.white,
+          ),
+          title: Text(
+            'Profiles',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );  
+  }
+
+  Widget _buildLogoutButton(){
+  return GestureDetector(
+      onTap: (){
+        Navigator.of(context).pushNamed('/signHome');
+      },
+      child: Container(
+        child: ListTile(
+          leading: Icon(
+            Icons.exit_to_app,
+            color: Colors.red,
+          ),
+          title: Text(
+            'Logout',
+            style: TextStyle(
+              color: Colors.red,
+            ),
+          ),
+        ),
+      ),
+    );  
+}
+
+  Widget _buildAppBar(){
+    return AppBar(
+      elevation: 0,      
+      iconTheme: IconThemeData(color: ColorConverter().backgroundSecondColor()),      
+      backgroundColor: Colors.transparent,
+      centerTitle: true,
+      title: GestureDetector(
+        onTap: (){
+          Navigator.of(context).pushNamed('/socimeeHome');
+        },
+        child: Icon(
+          Icons.home
+        ),
+      ),  
+      actions: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+          child: GestureDetector(
+            onTap: (){
+              
+            },
+            child: Icon(
+              Icons.chat
+            ),
+          ),
+        ),
+      ],    
     );
   }
 
