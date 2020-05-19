@@ -25,7 +25,6 @@ class MyApp extends StatelessWidget {
         '/socimeeHome': (context) => Home(),
         '/profileConfiguration': (context) => ProfileConfiguration(),
         '/userInfo': (context) => AccountSettings(),
-        '/updateUser': (context) => UpdateUser(),
         '/profilesList': (context) => SelectProfile()
       },
       title: 'Socimee',
