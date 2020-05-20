@@ -26,13 +26,9 @@ class MyApp extends StatelessWidget {
         '/socimeeHome': (context) => Home(),
         '/profileConfiguration': (context) => ProfileConfiguration(),
         '/userInfo': (context) => AccountSettings(),
-<<<<<<< HEAD
-        '/updateUser': (context) => UpdateUser(),
         '/profilesList': (context) => SelectProfile(),
-        '/changePassword': (context) => ChangePassword()
-=======
+        '/changePassword': (context) => ChangePassword(),
         '/profilesList': (context) => SelectProfile()
->>>>>>> 2246e62f8d72612226e30d49cd9a99c0dbad77b9
       },
       title: 'Socimee',
       theme: ThemeData(
