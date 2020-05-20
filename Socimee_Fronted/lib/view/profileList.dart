@@ -12,6 +12,28 @@ class SelectProfileState extends State<SelectProfile>{
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildGridProfileList(),
+      appBar: _buildAppBar(),
+    );
+  }
+
+  Widget _buildAppBar(){
+    return AppBar(
+      centerTitle: true,
+      title: Text(
+        'Profiles',
+      ),
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              ColorConverter().backgroundSecondColor(),
+              ColorConverter().backgroundFirstColor()
+            ]
+          ),
+        ),
+      ),
     );
   }
 

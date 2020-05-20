@@ -15,6 +15,7 @@ class AccountSettingsState extends State<AccountSettings>{
   Map<String, dynamic> body;
 
   final String url = "http://192.168.0.178:8084/Socimee/socimee/user/updateEmail";
+  String deleteUrl = "http://192.168.0.178:8084/Socimee/socimee/user/delete/";
 
   final formKey = GlobalKey<FormState>();
   
@@ -121,8 +122,9 @@ class AccountSettingsState extends State<AccountSettings>{
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             _buildFormField('Email', 'Email can\'t be empty'),
-            _buildChangePasswordButton(),
             _buildUpdateButton(),
+            _buildChangePasswordButton(),
+            _buildDeleteButton(),            
           ],
         ),
       ),
@@ -140,7 +142,7 @@ class AccountSettingsState extends State<AccountSettings>{
           fillColor: Colors.blue,
           labelText: label,
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(24),
             borderSide: BorderSide(
               color: Colors.blue
             ),
@@ -162,13 +164,50 @@ class AccountSettingsState extends State<AccountSettings>{
     );
   }
 
+  Widget _buildUpdateButton(){
+    return Container(
+      height: 50,
+      margin: EdgeInsets.fromLTRB(0, 32, 0, 0),
+      child: RaisedButton(
+        onPressed: (){
+          _validateAndSave();
+        },
+        padding: EdgeInsets.all(0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80)),
+        child: Ink(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+                ColorConverter().backgroundFirstColor(),
+                ColorConverter().backgroundSecondColor()
+              ],              
+            ),
+            borderRadius: BorderRadius.circular(32)
+          ),
+          child: Container(
+            alignment: Alignment.center,
+            child: Text(
+              'Update Email',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildChangePasswordButton(){
     return Container(
       height: 50,
       margin: EdgeInsets.fromLTRB(0, 32, 0, 0),
       child: RaisedButton(
         onPressed: (){       
-          Navigator.of(context).pushNamed('/changePassword');
+          Navigator.of(context).pushNamed('/changePassword', arguments: idUser);
         },
         padding: EdgeInsets.all(0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80)),
@@ -199,13 +238,13 @@ class AccountSettingsState extends State<AccountSettings>{
     );
   }
 
-  Widget _buildUpdateButton(){
+  Widget _buildDeleteButton(){
     return Container(
       height: 50,
       margin: EdgeInsets.fromLTRB(0, 32, 0, 0),
       child: RaisedButton(
-        onPressed: (){
-          _validateAndSave();
+        onPressed: (){       
+          _alertAccountDeleted();
         },
         padding: EdgeInsets.all(0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80)),
@@ -215,8 +254,8 @@ class AccountSettingsState extends State<AccountSettings>{
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: [
-                ColorConverter().backgroundFirstColor(),
-                ColorConverter().backgroundSecondColor()
+                Colors.red,
+                Colors.red
               ],              
             ),
             borderRadius: BorderRadius.circular(32)
@@ -224,7 +263,7 @@ class AccountSettingsState extends State<AccountSettings>{
           child: Container(
             alignment: Alignment.center,
             child: Text(
-              'Update Account',
+              'Delete Account',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18
@@ -234,6 +273,64 @@ class AccountSettingsState extends State<AccountSettings>{
         ),
       ),
     );
+  }
+
+  void _alertAccountDeleted(){
+    Future.delayed(Duration(seconds: 1), (){
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return AlertDialog(
+            content: Text(
+              'Are you sure you want do delete account?',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white
+              ),
+            ),
+            backgroundColor: ColorConverter().backgroundFirstColor().withOpacity(0.6),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(32)
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: (){
+                  Navigator.pop(context);
+                }, 
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: Colors.white
+                  ),
+                )
+              ),
+              FlatButton(
+                onPressed: (){
+                  _deleteAccount();
+                },
+                child: Text(
+                  'Confirm',
+                  style: TextStyle(
+                    color: Colors.white
+                  ),
+                ),
+              ),              
+            ],
+          );
+        }
+      );
+    });
+  }
+
+  void _deleteAccount(){
+    deleteUrl = deleteUrl + idUser;
+    print(deleteUrl);
+    HttpRequest().doDelete(deleteUrl).then((String id){
+      if(id != "false"){
+        Navigator.of(context).pushNamed('/signHome');
+      }
+    });
   }
 
 }

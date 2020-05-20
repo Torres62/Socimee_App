@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:socimee/view/changePassword.dart';
 import 'package:socimee/view/home.dart';
 import 'package:socimee/view/profileConfiguration.dart';
 import 'package:socimee/view/profileDescription.dart';
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
         '/profileConfiguration': (context) => ProfileConfiguration(),
         '/userInfo': (context) => AccountSettings(),
         '/updateUser': (context) => UpdateUser(),
-        '/profilesList': (context) => SelectProfile()
+        '/profilesList': (context) => SelectProfile(),
+        '/changePassword': (context) => ChangePassword()
       },
       title: 'Socimee',
       theme: ThemeData(

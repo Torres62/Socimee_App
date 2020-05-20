@@ -133,6 +133,56 @@ public class UserDAO extends ConnectionFactory {
         }
         return isUpdated;
     }
+    
+    public boolean updateEmail(User user){
+        long id = user.getId();
+        String email = user.getEmail();
+
+        boolean isUpdated = false;
+
+        PreparedStatement pstmt = null;
+        Connection connection = createConnection();
+
+        try {
+            pstmt = connection.prepareStatement("UPDATE User SET EMAIL = ? WHERE ID_USER = ?");
+            pstmt.setString(1, email);
+            pstmt.setLong(2, id);
+
+            int execute = pstmt.executeUpdate();
+            isUpdated = true;
+        } catch (SQLException e){
+            isUpdated = false;
+            e.printStackTrace();
+        } finally {
+            closeConnection(connection, pstmt, null);
+        }
+        return isUpdated;
+    }
+    
+    public boolean changePassword(User user){
+        long id = user.getId();
+        String password = user.getPassword();
+
+        boolean isUpdated = false;
+
+        PreparedStatement pstmt = null;
+        Connection connection = createConnection();
+
+        try {
+            pstmt = connection.prepareStatement("UPDATE User SET PASSWORD = ? WHERE ID_USER = ?");
+            pstmt.setString(1, password);
+            pstmt.setLong(2, id);
+
+            int execute = pstmt.executeUpdate();
+            isUpdated = true;
+        } catch (SQLException e){
+            isUpdated = false;
+            e.printStackTrace();
+        } finally {
+            closeConnection(connection, pstmt, null);
+        }
+        return isUpdated;
+    }
 
     public boolean delete(User user){
         boolean isDeleted = false;

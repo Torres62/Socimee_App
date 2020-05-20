@@ -105,6 +105,36 @@ public class UserService {
 		return Response.status(200).entity(true).build();
 	}
 	
+	@Path("/updateEmail")
+	@PUT
+	@Consumes("application/json")
+	@Produces("application/json")
+	public Response alterEmail(User user) {
+		UserController controller = new UserController();
+		boolean updatedUser = controller.updateEmail(user);
+		
+		if(updatedUser == false) {
+			return Response.status(404).entity(false).build();
+		}
+		
+		return Response.status(200).entity(true).build();
+	}
+	
+	@Path("/changePassword")
+	@PUT
+	@Consumes("application/json")
+	@Produces("application/json")
+	public Response changePassword(User user) {
+		UserController controller = new UserController();
+		boolean updatedUser = controller.changePassword(user);
+		
+		if(updatedUser == false) {
+			return Response.status(404).entity(false).build();
+		}
+		
+		return Response.status(200).entity(true).build();
+	}
+	
 	@Path("/delete/{id}")
 	@DELETE
 	@Produces("application/json")

@@ -28,7 +28,7 @@ class SignUpState extends State<SignUp>{
 
      Future.delayed(Duration(seconds: 2), (){
        HttpRequest().doCreate(url, body).then((String idUser){
-         if(idUser.isNotEmpty){
+         if(idUser != "false"){
            Navigator.of(context).pushNamed('/profileRegister', arguments: idUser);
          } else{
            _returnToSignUp();
