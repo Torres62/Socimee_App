@@ -8,7 +8,6 @@ import 'package:socimee/view/profilePersonality.dart';
 import 'package:socimee/view/profileRegister.dart';
 import 'package:socimee/view/signHome.dart';
 import 'package:socimee/view/signup.dart';
-import 'package:socimee/view/updateUser.dart';
 import 'package:socimee/view/userInfo.dart';
 
 void main() => runApp(MyApp());
@@ -27,9 +26,13 @@ class MyApp extends StatelessWidget {
         '/socimeeHome': (context) => Home(),
         '/profileConfiguration': (context) => ProfileConfiguration(),
         '/userInfo': (context) => AccountSettings(),
+<<<<<<< HEAD
         '/updateUser': (context) => UpdateUser(),
         '/profilesList': (context) => SelectProfile(),
         '/changePassword': (context) => ChangePassword()
+=======
+        '/profilesList': (context) => SelectProfile()
+>>>>>>> 2246e62f8d72612226e30d49cd9a99c0dbad77b9
       },
       title: 'Socimee',
       theme: ThemeData(
