@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.Logger;
+
 import br.com.socimee.controller.ProfileController;
 import br.com.socimee.model.Profile;
 
@@ -19,20 +21,22 @@ import br.com.socimee.model.Profile;
 @Path("/profile")
 public class ProfileService {
 	
+	final static Logger logger = Logger.getLogger(ProfileService.class);
+	
 	@Path("/readAll")
 	@GET
 	@Produces("application/json")
-	public Response readAllProfiles() {		
+	public Response readAllProfiles() {					
 		ProfileController controller = new ProfileController();
+			
+		ArrayList<Profile> profiles = controller.listAll();
 		
-		ArrayList<Profile> profiles = controller.listAll();		
-		
-		
-		if(profiles.isEmpty()) {
+		if (profiles == null) {
+			logger.error("Error trying to search all profiles in the database");
 			return Response.status(404).entity(false).build();
-		}
-		
-		return Response.status(200).entity(profiles).build();
+		} else {
+			return Response.status(200).entity(profiles).build();
+		}				
 	}
 	
 	@Path("/read")
@@ -45,10 +49,11 @@ public class ProfileService {
 		Profile readedProfile = controller.searchByID(profile.getIdProfile());
 		
 		if (readedProfile == null) {
+			logger.error("Error trying to search a profile in the database");
 			return Response.status(404).entity(false).build();
+		} else {
+			return Response.status(200).entity(readedProfile).build();
 		}
-				
-		return Response.status(200).entity(readedProfile).build();
 	}
 	
 	@Path("/create")
@@ -62,10 +67,11 @@ public class ProfileService {
 		Profile lastCreatedProfile = controller.searchLastCreatedID();
 		
 		if(isProfileCreated == false) {
+			logger.error("Error trying to create a profile in the database");
 			return Response.status(404).entity(false).build();
+		} else {		
+			return Response.status(200).entity(lastCreatedProfile.getIdProfile()).build();
 		}
-		
-		return Response.status(200).entity(lastCreatedProfile.getIdProfile()).build();
 	}
 	
 	@Path("/updatePersonality")
@@ -78,9 +84,11 @@ public class ProfileService {
 		boolean updatedProfile = controller.updateProfilePersonality(profile);
 		
 		if(updatedProfile == false) {
+			logger.error("Error trying to update a profile row in the database");
 			return Response.status(404).entity(false).build();
+		} else {
+			return Response.status(200).entity(true).build();
 		}
-		return Response.status(200).entity(true).build();
 	}
 	
 	@Path("/updateDescription")
@@ -93,9 +101,11 @@ public class ProfileService {
 		boolean updatedProfile = controller.updateProfileDescription(profile);
 		
 		if(updatedProfile == false) {
+			logger.error("Error trying to update a profile description in the database");
 			return Response.status(404).entity(false).build();
+		} else {
+			return Response.status(200).entity(true).build();
 		}
-		return Response.status(200).entity(true).build();
 	}
 	
 	
@@ -108,10 +118,11 @@ public class ProfileService {
 		boolean isProfileDeleted = controller.deleteProfile(profile);
 		
 		if(isProfileDeleted == false) {
+			logger.error("Error trying to delete a profile in the database");
 			return Response.status(404).entity(false).build();
-		}
-		return Response.status(200).entity(true).build();
-		
-	}	
-
+		} else {
+			return Response.status(200).entity(true).build();
+		}		
+	}
+	
 }

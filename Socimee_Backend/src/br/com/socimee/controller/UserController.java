@@ -11,14 +11,12 @@ public class UserController {
         return UserDAO.getInstance().listAll();
     }
 
-    public User searchByID(long id){
-        UserDAO dao = new UserDAO();
-        User user = dao.getById(id);
-        return user;
+    public User searchByID(long id){                
+        return UserDAO.getInstance().getById(id);
     }
 
     public boolean createUser(User user){
-        return new UserDAO().insert(user);
+        return UserDAO.getInstance().insert(user);
     }
 
     public boolean updateUser(User user){

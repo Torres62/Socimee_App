@@ -13,11 +13,15 @@ import java.util.ArrayList;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.Logger;
+
 import br.com.socimee.controller.UserController;
 import br.com.socimee.model.User;
  
 @Path("/user")
 public class UserService {
+	
+	final static Logger logger = Logger.getLogger(UserService.class);
  
 	@Path("/login")
 	@POST
@@ -29,6 +33,7 @@ public class UserService {
 		User loggedUser = controller.logInUser(user);
 		
 		if(loggedUser.getId() == null) {
+			logger.error("Error trying to login a user");
 			return Response.status(404).entity(loggedUser.getId()).build();	
 		}
 		return Response.status(200).entity(loggedUser.getId()).build();				
@@ -43,6 +48,7 @@ public class UserService {
 		ArrayList<User> users = controller.listAll();
 		
 		if(users.isEmpty()) {
+			logger.error("Error trying to search all users in the database");
 			return Response.status(404).entity(false).build();
 		}
 		
@@ -59,6 +65,7 @@ public class UserService {
 		User readedUser = controller.searchByID(idUser);
 		
 		if(readedUser == null) {
+			logger.error("Error trying to read a user in the database");
 			return Response.status(404).entity(false).build();
 		}
 		
@@ -75,7 +82,8 @@ public class UserService {
 		
 		//Verifico se existe um email ja cadastrado, caso exista eu retorno uma string do email
 		if(emailExists.getId() != null) {
-			return Response.status(404).entity(emailExists.getEmail()).build();
+			logger.error("Email already exists");
+			return Response.status(404).entity(false).build();
 		}
 		
 		boolean isCreateUser = controller.createUser(user);
@@ -85,9 +93,11 @@ public class UserService {
 		
 		//Verifico se foi criado e se nao foi retorno um false
 		if(isCreateUser == false) {
+			logger.error("Error trying to create a user in the database");
 			return Response.status(404).entity(isCreateUser).build();
+		} else {
+			return Response.status(200).entity(createdUser.getId()).build();
 		}
-		return Response.status(200).entity(createdUser.getId()).build();
 	}
 	
 	@Path("/update")
@@ -99,10 +109,11 @@ public class UserService {
 		boolean updatedUser = controller.updateUser(user);
 		
 		if(updatedUser == false) {
+			logger.error("Error trying to update a user in the database");
 			return Response.status(404).entity(false).build();
+		} else {		
+			return Response.status(200).entity(true).build();
 		}
-		
-		return Response.status(200).entity(true).build();
 	}
 	
 	@Path("/updateEmail")
@@ -114,10 +125,11 @@ public class UserService {
 		boolean updatedUser = controller.updateEmail(user);
 		
 		if(updatedUser == false) {
+			logger.error("Error trying to update a user in the database");
 			return Response.status(404).entity(false).build();
+		} else {		
+			return Response.status(200).entity(true).build();
 		}
-		
-		return Response.status(200).entity(true).build();
 	}
 	
 	@Path("/changePassword")
@@ -129,6 +141,7 @@ public class UserService {
 		boolean updatedUser = controller.changePassword(user);
 		
 		if(updatedUser == false) {
+			logger.error("Error trying to change a users password in the database");
 			return Response.status(404).entity(false).build();
 		}
 		
@@ -146,10 +159,11 @@ public class UserService {
 		boolean deletedUser = controller.deleteUser(user);
 		
 		if(deletedUser == false) {
+			logger.error("Error trying to delete a user in the database");
 			return Response.status(404).entity(false).build();
+		} else {		
+			return Response.status(200).entity(true).build();
 		}
-		
-		return Response.status(200).entity(true).build();
 	}
  
 }
