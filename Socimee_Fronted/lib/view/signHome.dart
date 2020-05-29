@@ -37,8 +37,11 @@ class SignHomeState extends State<SignHome>{
   
   @override
   Widget build(BuildContext context) {    
-    return Scaffold(
-      body: _buildHomeScreen(),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        body: _buildHomeScreen(),
+      ),
     );
   }
 

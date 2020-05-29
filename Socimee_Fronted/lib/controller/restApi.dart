@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HttpRequest{
 
@@ -47,7 +48,20 @@ class HttpRequest{
     String jsonBody = json.encode(body);
     Response response = await post(url, headers: headers, body: jsonBody, encoding: encoding);
 
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('idLogin', response.body);
+
     return Future<String>.value(response.body);
+  }
+
+   Future<String> getLogin() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return  Future<String>.value(prefs.getString('idLogin'));     
+  }
+
+  Future<void> doLogout() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('idLogin');
   }
 
 }

@@ -10,13 +10,16 @@ import 'package:socimee/view/signHome.dart';
 import 'package:socimee/view/signup.dart';
 import 'package:socimee/view/userInfo.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(Socimee());  
+}
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class Socimee extends StatelessWidget {
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {        
     return MaterialApp(
+      initialRoute: '/signHome',
       routes: {
         '/signHome': (context) => SignHome(),
         '/signup': (context) => SignUp(),
@@ -50,8 +53,7 @@ class MyApp extends StatelessWidget {
             borderSide: BorderSide(color: Colors.white)
           ),
         ),
-      ),
-      home: SignHome(),
+      ),      
     );
   }
 }

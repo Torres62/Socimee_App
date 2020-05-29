@@ -110,6 +110,7 @@ class ChangePasswordState extends State<ChangePassword>{
     return Container(
       margin: EdgeInsets.fromLTRB(0, 32, 0, 0),
       child: TextFormField(
+        obscureText: true,
         style: TextStyle(
           color: Colors.black
         ),

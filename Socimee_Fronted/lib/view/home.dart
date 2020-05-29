@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:socimee/controller/restApi.dart';
 import 'package:socimee/utils/ColorConverter.dart';
 
 class Home extends StatefulWidget{
@@ -17,6 +19,10 @@ class HomeState extends State<Home>{
   @override
   Widget build(BuildContext context) {
     idUser = ModalRoute.of(context).settings.arguments;
+    
+    HttpRequest().getLogin().then((String id){
+      print(id);
+    });
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -151,7 +157,9 @@ class HomeState extends State<Home>{
   Widget _buildLogoutButton(){
   return GestureDetector(
       onTap: (){
-        Navigator.of(context).pushNamed('/signHome');
+        HttpRequest().doLogout().then((void id){
+          Navigator.of(context).pushNamed('/signHome');
+        });      
       },
       child: Container(
         child: ListTile(
