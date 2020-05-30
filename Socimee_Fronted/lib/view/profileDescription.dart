@@ -20,18 +20,16 @@ class ProfileDescriptionState extends State<ProfileDescription>{
 
   Map<String, dynamic> body;
 
-  void validateAndSubmit(){
+  void validateAndSubmit() async {
     final form = formKey.currentState;
     form.save();
 
     body = {"idProfile": idProfile, "ocupacao": occupation, "descricao": description};
 
-    Future.delayed(Duration(seconds: 2), (){
-      HttpRequest().doPut(url, body).then((String id){
-        if(id != "false"){
-          Navigator.of(context).pushNamed('/socimeeHome', arguments: idProfile);
-        }
-      });
+    await  HttpRequest().doPut(url, body).then((String id){
+      if(id != "false"){
+      Navigator.of(context).pushNamed('/socimeeHome', arguments: idProfile);
+      }
     });
   }
 

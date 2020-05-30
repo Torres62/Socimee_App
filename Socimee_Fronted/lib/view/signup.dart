@@ -19,22 +19,20 @@ class SignUpState extends State<SignUp>{
   @override
   Widget build(BuildContext context) => _buildHome();
 
-  void validateAndSubmit(){
+  void validateAndSubmit() async{
     final form = formKey.currentState;
     if (form.validate()){
       form.save();
 
       body = {"id": null, "email": email, "password": password};
 
-     Future.delayed(Duration(seconds: 2), (){
-       HttpRequest().doCreate(url, body).then((String idUser){
-         if(idUser != "false"){
-           Navigator.of(context).pushNamed('/profileRegister', arguments: idUser);
-         } else{
-           _returnToSignUp();
-         }
-       });
-     });
+      await HttpRequest().doCreate(url, body).then((String idUser){
+        if(idUser != "false"){
+        Navigator.of(context).pushNamed('/profileRegister', arguments: idUser);
+        } else{
+          _returnToSignUp();
+        }
+      });
     }
   }
 

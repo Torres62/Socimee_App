@@ -16,12 +16,11 @@ class HomeState extends State<Home>{
   String cardPosition;
 
   @override
-  Widget build(BuildContext context) {
-    
+  Widget build(BuildContext context) {    
     HttpRequest().getLogin().then((String id){
       idUser = id;
     });
-
+    
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(

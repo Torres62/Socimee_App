@@ -17,24 +17,64 @@ class ChangePasswordState extends State<ChangePassword>{
 
   final String url = "http://192.168.0.178:8084/Socimee/socimee/user/changePassword";
 
-  void _validateAndSave(){
+  void _validateAndSave() async{
     final form = formKey.currentState;
     if (form.validate()){
       form.save();      
       if(_newPassword == _confirmedPassword){
         body = {"id": idUser, "password": _newPassword};
 
-        Future.delayed(Duration(seconds: 2), (){
-          HttpRequest().doPut(url, body).then((String id){
-            if(id != "false"){
-              _alertPasswordUpdated();
-            }
-          });
+        await  HttpRequest().doPut(url, body).then((String id){
+          if(id != "false"){
+            _alertPasswordUpdated();
+          }
         });
       } else {
-
+        _alertIncorrectPassword();
       }
     }
+  }
+
+  void _alertIncorrectPassword(){
+    Future.delayed(Duration(seconds: 1), (){
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Icon(
+              Icons.error,
+              color: Colors.red,
+              size: 50,
+            ),
+            content: Text(
+              'Password Do Not Match',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white
+              ),
+            ),
+            backgroundColor: ColorConverter().backgroundFirstColor().withOpacity(0.6),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(32)
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: (){
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Confirm',
+                  style: TextStyle(
+                    color: Colors.white
+                  ),
+                ),
+              )
+            ],
+          );
+        }
+      );
+    });
   }
 
   void _alertPasswordUpdated(){

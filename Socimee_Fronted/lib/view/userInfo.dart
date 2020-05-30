@@ -29,28 +29,22 @@ class AccountSettingsState extends State<AccountSettings>{
     );
   }
 
-  void _validateAndSave(){
+  void _validateAndSave() async{
     final form = formKey.currentState;
     if(form.validate()){
       form.save();
 
-      Future.delayed(Duration(seconds: 1), (){
-        HttpRequest().getLogin().then((String id){
-          idUser = id;
-        });
-      });
-      
-      print(idUser);
+      await HttpRequest().getLogin().then((String id){
+          idUser = id;        
+      });   
 
       body = {"id": idUser, "email": _email};
 
-      Future.delayed(Duration(seconds: 2), (){
-        HttpRequest().doPut(url, body).then((String id){
+      await HttpRequest().doPut(url, body).then((String id){
           if(id != "false"){
             _alertProfileCreated();
           }
-        });
-      });    
+      }); 
     }
   }
 

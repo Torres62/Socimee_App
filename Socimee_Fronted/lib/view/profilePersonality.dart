@@ -21,19 +21,17 @@ class ProfilePersonalityState extends State<ProfilePersonality>{
 
   final formKey = GlobalKey<FormState>();  
 
-  void validateAndSubmit(){
+  void validateAndSubmit() async {
     final form = formKey.currentState;
     if(form.validate()){
       form.save();
 
       body = {"idProfile": idProfile, "filme": selectedMovie, "musica": selectedMusic, "serie": selectedTvShow, "anime": selectedAnime};
-
-      Future.delayed(Duration(seconds: 2), (){
-       HttpRequest().doPut(url, body).then((String id){
-         if(id != "false"){
-            Navigator.of(context).pushNamed('/profileDescription', arguments: idProfile);
-         }
-       });
+      
+      await HttpRequest().doPut(url, body).then((String id){
+        if(id != "false"){
+          Navigator.of(context).pushNamed('/profileDescription', arguments: idProfile);
+        }
       });
     }
   }

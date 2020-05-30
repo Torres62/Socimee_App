@@ -27,19 +27,17 @@ class ProfileRegisterState extends State<ProfileRegister>{
     return _buildProfile();
   }
 
-  void valideAndSubmit(){
+  void valideAndSubmit() async{
     final form = formKey.currentState;
     if(form.validate()){
       form.save();
 
       body = {"nome":  name, "sexo": sex, "dataNascimento": birthDate.toString(), "idPerfilFacebook": "1", "idUser": idUser};
 
-      Future.delayed(Duration(seconds: 2), (){
-       HttpRequest().doCreate(url, body).then((String idProfile){
-         if(idProfile.isNotEmpty){
-            Navigator.of(context).pushNamed('/profilePersonality', arguments: idProfile);
-         }
-       });
+      await HttpRequest().doCreate(url, body).then((String idProfile){
+        if(idProfile.isNotEmpty){
+          Navigator.of(context).pushNamed('/profilePersonality', arguments: idProfile);
+        }
       });
     }
   }

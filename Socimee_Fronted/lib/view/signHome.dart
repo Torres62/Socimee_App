@@ -16,21 +16,19 @@ class SignHomeState extends State<SignHome>{
   final String url = 'http://192.168.0.178:8084/Socimee/socimee/user/login';
   Map<String, dynamic> body;
 
-  void _validateAndSubmit(){
+  void _validateAndSubmit() async{
     final form = formKey.currentState;
     if (form.validate()){
       form.save();
 
       body = {"email": _email, "password": _password}; 
 
-      Future.delayed(Duration(seconds: 2), (){
-        HttpRequest().doLogin(url, body).then((String id){        
-          if(id.isNotEmpty){                              
-            Navigator.of(context).pushNamed('/socimeeHome');
-          } else{
-            _returnToSignIn();            
-          }
-        });
+      await  HttpRequest().doLogin(url, body).then((String id){        
+        if(id != "null"){                              
+          Navigator.of(context).pushNamed('/socimeeHome');
+        } else{
+          _returnToSignIn();            
+        }
       });
     }
   }
