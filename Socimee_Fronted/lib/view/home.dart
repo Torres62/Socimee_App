@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socimee/controller/restApi.dart';
 import 'package:socimee/utils/ColorConverter.dart';
 
@@ -18,10 +17,9 @@ class HomeState extends State<Home>{
 
   @override
   Widget build(BuildContext context) {
-    idUser = ModalRoute.of(context).settings.arguments;
     
     HttpRequest().getLogin().then((String id){
-      print(id);
+      idUser = id;
     });
 
     return WillPopScope(
@@ -45,10 +43,10 @@ class HomeState extends State<Home>{
           totalNum: 6,
           stackNum: 3,
           swipeEdge: 4.0,
-          maxWidth: MediaQuery.of(context).size.width * 0.9,
-          maxHeight: MediaQuery.of(context).size.width * 0.9,
-          minWidth: MediaQuery.of(context).size.width * 0.8,
-          minHeight: MediaQuery.of(context).size.width * 0.8,
+          maxWidth: MediaQuery.of(context).size.width * 1,
+          maxHeight: MediaQuery.of(context).size.width * 1,
+          minWidth: MediaQuery.of(context).size.width * 0.9,
+          minHeight: MediaQuery.of(context).size.width * 0.9,
           cardBuilder: (context, index) {
             return Card(
               color: ColorConverter().textGreyColor(),
@@ -113,7 +111,7 @@ class HomeState extends State<Home>{
   Widget _buildAccountSettings(){
   return GestureDetector(
       onTap: (){
-        Navigator.of(context).pushNamed('/userInfo', arguments: idUser);
+        Navigator.of(context).pushNamed('/userInfo');
       },
       child: Container(
         child: ListTile(

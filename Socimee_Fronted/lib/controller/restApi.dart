@@ -29,6 +29,9 @@ class HttpRequest{
     String jsonBody = json.encode(body);
     Response response = await post(url, headers: headers, body: jsonBody, encoding: encoding);
 
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('idLogin', response.body);
+
     return Future<String>.value(response.body);
   }
 

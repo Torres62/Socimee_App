@@ -165,6 +165,15 @@ class ProfileRegisterState extends State<ProfileRegister>{
 
   Future<Null> _selectDate(BuildContext context) async{
     final DateTime picked = await showDatePicker(
+      builder: (BuildContext context, Widget child){
+        return Theme(
+          data: ThemeData.dark().copyWith(            
+            primaryColor: const Color(0xFF4A5BF6),
+            accentColor: const Color(0xFF4A5BF6),
+          ), 
+          child: child
+        );
+      },
       context: context, 
       initialDate: DateTime(2020), 
       firstDate: DateTime(1900), 

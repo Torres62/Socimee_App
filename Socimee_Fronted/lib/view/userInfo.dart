@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socimee/controller/restApi.dart';
 import 'package:socimee/utils/ColorConverter.dart';
 
@@ -22,8 +23,6 @@ class AccountSettingsState extends State<AccountSettings>{
 
   @override
   Widget build(BuildContext context) {
-    idUser = ModalRoute.of(context).settings.arguments;
-
     return Scaffold(
       body: _buildAccountSettings(),
       appBar: _buildAppBar(),
@@ -34,7 +33,15 @@ class AccountSettingsState extends State<AccountSettings>{
     final form = formKey.currentState;
     if(form.validate()){
       form.save();
+
+      Future.delayed(Duration(seconds: 1), (){
+        HttpRequest().getLogin().then((String id){
+          idUser = id;
+        });
+      });
       
+      print(idUser);
+
       body = {"id": idUser, "email": _email};
 
       Future.delayed(Duration(seconds: 2), (){

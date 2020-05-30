@@ -26,7 +26,7 @@ class SignHomeState extends State<SignHome>{
       Future.delayed(Duration(seconds: 2), (){
         HttpRequest().doLogin(url, body).then((String id){        
           if(id.isNotEmpty){                              
-            Navigator.of(context).pushNamed('/socimeeHome', arguments: id);
+            Navigator.of(context).pushNamed('/socimeeHome');
           } else{
             _returnToSignIn();            
           }
