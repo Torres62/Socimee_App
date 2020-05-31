@@ -324,7 +324,6 @@ class AccountSettingsState extends State<AccountSettings>{
 
   void _deleteAccount(){
     deleteUrl = deleteUrl + idUser;
-    print(deleteUrl);
     HttpRequest().doDelete(deleteUrl).then((String id){
       if(id != "false"){
         Navigator.of(context).pushNamed('/signHome');

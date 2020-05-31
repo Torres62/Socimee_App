@@ -27,7 +27,6 @@ class SignUpState extends State<SignUp>{
       body = {"id": null, "email": email, "password": password};
 
       await HttpRequest().doCreate(url, body).then((String idUser){
-        print(idUser);
         if(idUser != "null"){
         Navigator.of(context).pushNamed('/profileRegister', arguments: idUser);
         } else{

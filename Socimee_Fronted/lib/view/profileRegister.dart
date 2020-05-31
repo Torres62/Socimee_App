@@ -34,10 +34,9 @@ class ProfileRegisterState extends State<ProfileRegister>{
 
       body = {"nome":  name, "sexo": sex, "dataNascimento": birthDate.toString(), "idPerfilFacebook": "1", "idUser": idUser};
 
-      await HttpRequest().doCreate(url, body).then((String idProfile){
-        print(idProfile);
+      await HttpRequest().doCreateProfile(url, body).then((String idProfile){
         if(idProfile != "false"){
-          Navigator.of(context).pushNamed('/profilePersonality');
+          Navigator.of(context).pushNamed('/profilePersonality', arguments: idProfile);
         }
       });
     }
