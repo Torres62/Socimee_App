@@ -107,7 +107,7 @@ public class UserService {
 	@Consumes("application/json")
 	@Produces("application/json")
 	public Response alterUser(User user) {
-		UserController controller = new UserController();
+		UserController controller = new UserController();		
 		boolean updatedUser = controller.updateUser(user);
 		
 		if(updatedUser == false) {

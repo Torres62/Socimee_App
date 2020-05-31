@@ -48,7 +48,7 @@ class ChangePasswordState extends State<ChangePassword>{
               size: 50,
             ),
             content: Text(
-              'Password Do Not Match',
+              'Passwords Do Not Match',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white

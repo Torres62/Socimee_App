@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socimee/controller/restApi.dart';
 import 'package:socimee/utils/ColorConverter.dart';
 
@@ -37,7 +36,6 @@ class AccountSettingsState extends State<AccountSettings>{
       await HttpRequest().getLogin().then((String id){
           idUser = id;        
       });   
-
       body = {"id": idUser, "email": _email};
 
       await HttpRequest().doPut(url, body).then((String id){

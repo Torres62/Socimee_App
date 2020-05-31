@@ -40,7 +40,7 @@ class HttpRequest{
   }
 
   Future<String> doPut(String url , Map<String, dynamic> body) async{
-    String jsonBody = json.encode(body);
+    String jsonBody = json.encode(body);    
     Response response = await put(url, headers: headers, body: jsonBody, encoding: encoding);
     
     return Future<String>.value(response.body);

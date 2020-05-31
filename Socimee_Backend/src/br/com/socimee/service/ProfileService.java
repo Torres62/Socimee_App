@@ -67,10 +67,10 @@ public class ProfileService {
 		Profile lastCreatedProfile = controller.searchLastCreatedID();
 		
 		if(isProfileCreated == false) {
-			logger.error("Error trying to create a profile in the database");
+			logger.error("Error trying to create a profile in the database");			
 			return Response.status(404).entity(false).build();
 		} else {		
-			return Response.status(200).entity(lastCreatedProfile.getIdProfile()).build();
+			return Response.status(200).entity(lastCreatedProfile).build();
 		}
 	}
 	
