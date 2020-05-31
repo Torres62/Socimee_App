@@ -1,1 +1,35 @@
 2020-05-23 12:59:47 ERROR ProfileService:51 - This is error a read error
+2020-05-29 18:38:09 ERROR UserService:36 - Error trying to login a user
+2020-05-29 18:38:18 ERROR UserService:36 - Error trying to login a user
+2020-05-29 20:28:39 ERROR UserService:36 - Error trying to login a user
+2020-05-30 11:48:00 ERROR UserService:36 - Error trying to login a user
+2020-05-30 11:51:30 ERROR UserService:36 - Error trying to login a user
+2020-05-30 11:51:40 ERROR UserService:36 - Error trying to login a user
+2020-05-30 11:55:05 ERROR UserService:36 - Error trying to login a user
+2020-05-30 12:05:11 ERROR UserService:36 - Error trying to login a user
+2020-05-30 12:08:05 ERROR UserService:36 - Error trying to login a user
+2020-05-30 12:08:23 ERROR UserService:36 - Error trying to login a user
+2020-05-30 12:08:52 ERROR UserService:36 - Error trying to login a user
+2020-05-30 12:09:22 ERROR UserService:36 - Error trying to login a user
+2020-05-30 12:09:30 ERROR UserService:36 - Error trying to login a user
+2020-05-30 12:09:46 ERROR UserService:36 - Error trying to login a user
+2020-05-30 18:33:22 ERROR UserService:36 - Error trying to login a user
+2020-05-30 18:33:27 ERROR UserService:36 - Error trying to login a user
+2020-05-30 19:21:34 ERROR UserService:36 - Error trying to login a user
+2020-05-30 19:21:44 ERROR UserService:85 - Email already exists
+2020-05-30 19:23:04 ERROR UserService:85 - Email already exists
+2020-05-30 21:35:07 ERROR UserService:85 - Email already exists
+2020-05-30 21:35:12 ERROR UserService:85 - Email already exists
+2020-05-30 21:35:13 ERROR UserService:85 - Email already exists
+2020-05-30 21:35:14 ERROR UserService:85 - Email already exists
+2020-05-30 21:35:52 ERROR UserService:85 - Email already exists
+2020-05-30 21:36:48 ERROR UserService:85 - Email already exists
+2020-05-30 21:38:59 ERROR UserService:85 - Email already exists
+2020-05-30 21:39:01 ERROR UserService:85 - Email already exists
+2020-05-30 21:39:14 ERROR UserService:85 - Email already exists
+2020-05-30 21:40:20 ERROR UserService:85 - Email already exists
+2020-05-30 21:55:30 ERROR UserService:85 - Email already exists
+2020-05-30 21:56:15 ERROR UserService:85 - Email already exists
+2020-05-30 21:56:25 ERROR UserService:85 - Email already exists
+2020-05-30 22:03:52 ERROR UserService:85 - Email already exists
+2020-05-30 22:04:53 ERROR UserService:85 - Email already exists

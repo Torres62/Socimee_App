@@ -34,9 +34,9 @@ public class UserService {
 		
 		if(loggedUser.getId() == null) {
 			logger.error("Error trying to login a user");
-			return Response.status(404).entity(loggedUser.getId()).build();	
+			return Response.status(404).entity(loggedUser).build();	
 		}
-		return Response.status(200).entity(loggedUser.getId()).build();				
+		return Response.status(200).entity(loggedUser).build();				
 	}
 	
 	@Path("/readAll")
@@ -80,10 +80,12 @@ public class UserService {
 		UserController controller = new UserController();		
 		User emailExists = controller.searchByEmail(user);
 		
-		//Verifico se existe um email ja cadastrado, caso exista eu retorno uma string do email
+		//Verifico se existe um email ja cadastrado, caso exista eu retorno um false
 		if(emailExists.getId() != null) {
 			logger.error("Email already exists");
-			return Response.status(404).entity(false).build();
+			User notLoggedUser = new User();
+			notLoggedUser.setId(null);
+			return Response.status(404).entity(notLoggedUser).build();
 		}
 		
 		boolean isCreateUser = controller.createUser(user);
@@ -96,7 +98,7 @@ public class UserService {
 			logger.error("Error trying to create a user in the database");
 			return Response.status(404).entity(isCreateUser).build();
 		} else {
-			return Response.status(200).entity(createdUser.getId()).build();
+			return Response.status(200).entity(createdUser).build();
 		}
 	}
 	

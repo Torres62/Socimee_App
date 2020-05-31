@@ -123,7 +123,6 @@ public class UserDAO extends ConnectionFactory {
             pstmt.setString(2, password);
             pstmt.setLong(3, id);
 
-            int execute = pstmt.executeUpdate();
             isUpdated = true;
         } catch (SQLException e){
             isUpdated = false;
@@ -148,7 +147,6 @@ public class UserDAO extends ConnectionFactory {
             pstmt.setString(1, email);
             pstmt.setLong(2, id);
 
-            int execute = pstmt.executeUpdate();
             isUpdated = true;
         } catch (SQLException e){
             isUpdated = false;
@@ -173,7 +171,6 @@ public class UserDAO extends ConnectionFactory {
             pstmt.setString(1, password);
             pstmt.setLong(2, id);
 
-            int execute = pstmt.executeUpdate();
             isUpdated = true;
         } catch (SQLException e){
             isUpdated = false;
@@ -192,7 +189,6 @@ public class UserDAO extends ConnectionFactory {
             pstmt = connection.prepareStatement("DELETE FROM User WHERE ID_USER = ?");
             pstmt.setInt(1, user.getId());
 
-            boolean execute = pstmt.execute();
             isDeleted = true;
         } catch (SQLException e){
             isDeleted = false;
