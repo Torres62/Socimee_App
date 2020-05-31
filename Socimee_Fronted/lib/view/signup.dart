@@ -27,7 +27,8 @@ class SignUpState extends State<SignUp>{
       body = {"id": null, "email": email, "password": password};
 
       await HttpRequest().doCreate(url, body).then((String idUser){
-        if(idUser != "false"){
+        print(idUser);
+        if(idUser != "null"){
         Navigator.of(context).pushNamed('/profileRegister', arguments: idUser);
         } else{
           _returnToSignUp();
@@ -137,18 +138,35 @@ class SignUpState extends State<SignUp>{
         barrierDismissible: true,
         builder: (BuildContext context){
           return AlertDialog(
-            title: Text('Invalid values'),
-            content: Text('Email or password invalid'),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+            title: Text(
+              'Invalid values', 
+              style: TextStyle(
+                color: ColorConverter().textBlueColor()
+              ),
+            ),
+            content: Text(
+              'Email already exists',
+              style: TextStyle(
+                color: ColorConverter().textBlueColor()
+              ),
+            ),
             actions: <Widget>[
               FlatButton(
                 onPressed: (){
-                  Navigator.of(context).pushNamed('/signup'); 
+                  Navigator.pop(context); 
                 },
-                child: Text('Try Again')),
+                child: Text(
+                  'Try Again',
+                  style: TextStyle(
+                    color: ColorConverter().textBlueColor()
+                  ),
+                )
+              ),
             ],
           );
         }
       );
-    });
+    }); 
   }
 }

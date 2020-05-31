@@ -29,10 +29,14 @@ class HttpRequest{
     String jsonBody = json.encode(body);
     Response response = await post(url, headers: headers, body: jsonBody, encoding: encoding);
 
+    final bodyResponse = jsonDecode(response.body)['id'];
+    
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('idLogin', response.body[0]);
+    prefs.remove('idLogin');
 
-    return Future<String>.value(response.body[0]);
+    await prefs.setString('idLogin', bodyResponse.toString());    
+
+    return Future<String>.value(bodyResponse.toString());
   }
 
   Future<String> doPut(String url , Map<String, dynamic> body) async{
@@ -54,6 +58,7 @@ class HttpRequest{
     final bodyResponse = jsonDecode(response.body)['id'];
     
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('idLogin');
     await prefs.setString('idLogin', bodyResponse.toString());    
 
     return Future<String>.value(bodyResponse.toString());
