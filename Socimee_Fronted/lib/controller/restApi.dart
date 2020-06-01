@@ -7,7 +7,6 @@ class HttpRequest{
 
   final headers = {'Content-Type': 'application/json'};
   final encoding = Encoding.getByName('utf-8');
-  String _idUser;
 
   Future<bool> doPost(String url, Map<String, dynamic> body) async{
     String jsonBody = json.encode(body);

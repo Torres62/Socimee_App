@@ -1,2 +1,4 @@
 2020-05-31 15:23:53 ERROR UserService:36 - Error trying to login a user
 2020-05-31 15:54:41 ERROR UserService:130 - Error trying to update a user in the database
+2020-05-31 18:49:25 ERROR UserService:36 - Error trying to login a user
+2020-05-31 18:52:04 ERROR UserService:85 - Email already exists
