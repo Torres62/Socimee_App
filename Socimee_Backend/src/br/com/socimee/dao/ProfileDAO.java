@@ -64,6 +64,52 @@ public class ProfileDAO extends ConnectionFactory{
         return profiles;
     }
     
+    public ArrayList<Profile> listUserProfiles(long idUser){
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        ArrayList<Profile> profiles = null;
+
+        connection = createConnection();
+        profiles = new ArrayList<Profile>();
+
+        try {
+            pstmt = connection.prepareStatement("SELECT * FROM Profile WHERE Registro_idRegistro = ? ORDER BY Nome");
+            pstmt.setLong(1, idUser);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()){
+
+            	Profile profile = new Profile();
+
+            	profile.setIdProfile(rs.getInt("ID_PROFILE"));
+				profile.setNome(rs.getString("Nome"));
+				profile.setSexo(rs.getString("Sexo"));
+				profile.setDataNascimento(rs.getString("DataNascimento"));
+				profile.setDistanciaMaxima(rs.getInt("DistanciaMaxima"));
+				profile.setFaixaEtaria(rs.getInt("FaixaEtaria"));
+				profile.setStatusPerfil(rs.getString("StatusPerfil"));
+				profile.setDescricao(rs.getString("Descricao"));
+				profile.setFilme(rs.getString("GeneroFilme"));
+				profile.setMusica(rs.getString("GeneroMusica"));
+				profile.setSerie(rs.getString("SerieFavorita"));
+				profile.setAnime(rs.getString("AnimeFavorito"));
+				profile.setOcupacao(rs.getString("Ocupacao"));
+				profile.setIdPerfilFacebook(rs.getInt("PerfilFacebook_idPerfilFacebook"));
+				profile.setIdUser(rs.getInt("Registro_idRegistro"));
+
+                profiles.add(profile);
+            }
+
+        }catch (Exception e){
+            System.out.println("Error listing all clients: " + e);
+            e.printStackTrace();
+        } finally {
+            closeConnection(connection, pstmt, rs);
+        }
+        return profiles;
+    }
+    
 	public Profile getByID(long id) {
 		Connection connection = null;
 		PreparedStatement pstmt = null;

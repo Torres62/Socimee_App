@@ -24,6 +24,12 @@ class HttpRequest{
     return Future<Map<String, dynamic>>.value(data);
   }
 
+  Future<Map<String, dynamic>> doGetUserProfiles(String url) async{
+    var response = await get(url, headers: headers);
+    var data = json.decode(response.body);
+    return Future<Map<String, dynamic>>.value(data);
+  }
+
   Future<String> doCreate(String url, Map<String, dynamic> body) async{
     String jsonBody = json.encode(body);
     Response response = await post(url, headers: headers, body: jsonBody, encoding: encoding);

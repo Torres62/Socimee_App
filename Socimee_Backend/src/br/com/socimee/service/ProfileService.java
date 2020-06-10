@@ -5,6 +5,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import java.util.ArrayList;
@@ -30,6 +31,24 @@ public class ProfileService {
 		ProfileController controller = new ProfileController();
 			
 		ArrayList<Profile> profiles = controller.listAll();
+		
+		if (profiles == null) {
+			logger.error("Error trying to search all profiles in the database");
+			return Response.status(404).entity(false).build();
+		} else {
+			return Response.status(200).entity(profiles).build();
+		}				
+	}
+	
+	@Path("/readUserProfiles/{id}")
+	@GET
+	@Produces("application/json")
+	public Response readUserProfiles(@PathParam("id") String id) {					
+		ProfileController controller = new ProfileController();
+		
+		int idUser = Integer.parseInt(id);	
+		
+		ArrayList<Profile> profiles = controller.listUserProfiles(idUser);
 		
 		if (profiles == null) {
 			logger.error("Error trying to search all profiles in the database");
