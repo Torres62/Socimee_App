@@ -17,10 +17,10 @@ class SelectProfileState extends State<SelectProfile>{
   String url = "http://192.168.0.178:8084/Socimee/socimee/profile/readUserProfiles/";
 
   loadProfiles() async{
-    HttpRequest().getLogin().then((String idUser){
+    await HttpRequest().getLogin().then((String idUser){
       url = url + idUser;
     });
-    HttpRequest().doGetUserProfiles(url).then((res){      
+    await HttpRequest().doGetUserProfiles(url).then((res){      
       _profilesController.add(res);
       return res;            
     });
@@ -35,7 +35,7 @@ class SelectProfileState extends State<SelectProfile>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildGridProfileList(),
+      body: _buildBody(),
       appBar: _buildAppBar(),
     );
   }
@@ -61,37 +61,33 @@ class SelectProfileState extends State<SelectProfile>{
     );
   }
 
+  Widget _buildBody(){
+    return SafeArea(
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            _buildGridProfileList()
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildGridProfileList(){
-    return Container(
-      margin: EdgeInsets.all(64),      
-      child: StreamBuilder<Object>(
+    return Expanded(
+      child: StreamBuilder(
+        initialData: [],
         stream: _profilesController.stream,
-        builder: (context, snapshot) {
-          return GridView.builder(      
-            physics: BouncingScrollPhysics(),
-            padding: EdgeInsets.all(32),      
-            itemCount: 5,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 4, 
-              crossAxisSpacing: 4,
-            ), 
-            itemBuilder: (BuildContext context, int index){
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: (){
-                    Navigator.of(context).pushNamed('/profileConfiguration');
-                  },
-                  child: Card(
-                    elevation: 1,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                    color: Colors.transparent,
-                  ),
-                ),
-              );
-            }
-          );
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          print('Snapshot Data ${snapshot.data}');     
+          return ListView(
+            children: <Widget>[
+              Text(
+                snapshot.data.toString()
+              ),
+            ],
+          );            
         }
       ),
     );
