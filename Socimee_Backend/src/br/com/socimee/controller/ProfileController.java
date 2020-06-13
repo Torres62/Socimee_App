@@ -40,6 +40,11 @@ public class ProfileController {
 		return new ProfileDAO().updateProfileDescription(profile);
 	}
 	
+	public boolean updateProfile(Profile profile) {
+		System.out.println("Update profile with id: " + profile.getIdProfile());
+		return new ProfileDAO().updateProfile(profile);
+	}
+	
 	public boolean deleteProfile(Profile profile) {
 		System.out.println("Delete profile with id: " + profile.getIdProfile());
 		return new ProfileDAO().delete(profile);

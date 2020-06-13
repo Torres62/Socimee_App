@@ -32,11 +32,13 @@ class SelectProfileState extends State<SelectProfile>{
     loadProfiles();
     super.initState();
   }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildBody(),
       appBar: _buildAppBar(),
+      floatingActionButton: _buildAddProfileButton(),
     );
   }
 
@@ -63,7 +65,7 @@ class SelectProfileState extends State<SelectProfile>{
 
   Widget _buildBody(){
     return SafeArea(
-      child: Container(
+      child: Container(        
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
@@ -80,15 +82,63 @@ class SelectProfileState extends State<SelectProfile>{
         initialData: [],
         stream: _profilesController.stream,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          print('Snapshot Data ${snapshot.data}');     
-          return ListView(
-            children: <Widget>[
-              Text(
-                snapshot.data.toString()
-              ),
-            ],
-          );            
+          return _buildProfilesList(snapshot);
         }
+      ),
+    );
+  }
+
+  Widget _buildProfilesList(AsyncSnapshot snapshot){
+    return GridView.builder(
+      itemCount: snapshot.data.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2), 
+      itemBuilder: (context, index){
+        var profile = snapshot.data[index];
+        return _buildProfileContainer(profile);
+      }
+    );    
+  }
+
+  Widget _buildProfileContainer(var profile){
+    return GestureDetector(
+      onTap: (){
+        Navigator.pushNamed(context, '/profileSettings', arguments: profile);
+      },
+      child: Container(          
+        margin: EdgeInsets.fromLTRB(60, 30, 60, 30),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(40),
+          border: Border.all(
+            color: ColorConverter().backgroundSecondColor()
+          ),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              ColorConverter().backgroundSecondColor().withOpacity(0.8),
+              ColorConverter().backgroundFirstColor().withOpacity(0.8)
+            ],
+          ),
+        ),       
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: GridTile(                                      
+            child: Text(
+              profile['nome'], 
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddProfileButton(){
+    return FloatingActionButton(
+      onPressed: (){},
+      backgroundColor: ColorConverter().backgroundSecondColor(),
+      child: Icon(
+        Icons.add,
+        size: 30,
       ),
     );
   }

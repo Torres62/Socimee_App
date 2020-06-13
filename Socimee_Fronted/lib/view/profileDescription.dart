@@ -65,7 +65,6 @@ class ProfileDescriptionState extends State<ProfileDescription>{
             crossAxisAlignment: CrossAxisAlignment.stretch,        
             children: <Widget>[      
               _buildOccupationField(),
-              _buildFoodField(),
               _buildPlaceField(),
               _buildDescriptionField(),
               _buildConfirmationButton(),
@@ -93,30 +92,6 @@ class ProfileDescriptionState extends State<ProfileDescription>{
             ),
             onSaved: (value){
               occupation = value;
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFoodField(){
-    return Padding(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        children: <Widget>[
-          Text(
-            'Type your Favorite Food',
-            style: TextStyle(color: Colors.white),
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              labelText: 'Food',
-              labelStyle: TextStyle(color: Colors.white),
-              prefixIcon: Icon(Icons.kitchen, color: Colors.white),
-            ),
-            onSaved: (value){
-              food = value;
             },
           ),
         ],

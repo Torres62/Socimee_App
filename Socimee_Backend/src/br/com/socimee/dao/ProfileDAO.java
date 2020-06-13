@@ -206,6 +206,56 @@ public class ProfileDAO extends ConnectionFactory{
 		return isProfileCreated;
 	}
 	
+	public boolean updateProfile(Profile profile) {
+		
+		String nome = profile.getNome();
+		String sexo = profile.getSexo();
+		String dataNascimento = profile.getDataNascimento();
+		int distanciaMaxima = profile.getDistanciaMaxima();
+		int faixaEtaria = profile.getFaixaEtaria();
+		String statusPerfil = profile.getStatusPerfil();
+		String descricao = profile.getDescricao();
+		String filme = profile.getFilme();
+		String musica = profile.getMusica();
+		String serie = profile.getSerie();
+		String anime = profile.getAnime();
+		String ocupacao = profile.getOcupacao();
+		int iduser = profile.getIdUser();
+				
+		boolean isProfileCreated = false;
+		
+		PreparedStatement pstmt = null;
+		Connection connection = createConnection();
+		try {
+			pstmt = connection.prepareStatement("UPDATE profile set Nome = ?,  Sexo = ?, DataNascimento = ?, DistanciaMaxima = ?, FaixaEtaria = ?,"
+					+ " StatusPerfil = ?, Descricao = ?, GeneroFilme = ?, GeneroMusica = ?, SerieFavorita = ?, AnimeFavorito = ?, Ocupacao = ?,"
+					+ " PerfilFacebook_idPerfilFacebook = ?, Registro_idRegistro WHERE ID_PROFILE = ?");
+			pstmt.setString(1, nome);
+			pstmt.setString(2, sexo);
+			pstmt.setString(3, dataNascimento);
+			pstmt.setInt(4, distanciaMaxima);
+			pstmt.setInt(5, faixaEtaria);
+			pstmt.setString(6, statusPerfil);
+			pstmt.setString(7, descricao);
+			pstmt.setString(8, filme);
+			pstmt.setString(9, musica);
+			pstmt.setString(10, serie);
+			pstmt.setString(11, anime);
+			pstmt.setString(12, ocupacao);
+			pstmt.setInt(13, 1);
+			pstmt.setInt(14, iduser);
+			
+			boolean execute = pstmt.execute();
+			System.out.println(execute);
+			isProfileCreated = true;
+			
+		} catch (SQLException e) {
+			isProfileCreated = false;
+			e.printStackTrace();
+		}
+		return isProfileCreated;
+	}
+	
 	public boolean updateProfilePersonality(Profile profile) {
 		int idProfile = profile.getIdProfile();
 		String filme = profile.getFilme();

@@ -127,6 +127,23 @@ public class ProfileService {
 		}
 	}
 	
+	@Path("/update")
+	@PUT
+	@Consumes("application/json")
+	@Produces("application/json")
+	public Response update(Profile profile) {
+		ProfileController controller = new ProfileController();
+		
+		boolean updatedProfile = controller.updateProfile(profile);
+		
+		if(updatedProfile == false) {
+			logger.error("Error trying to update a profile description in the database");
+			return Response.status(404).entity(false).build();
+		} else {
+			return Response.status(200).entity(true).build();
+		}
+	}
+	
 	
 	@Path("/delete")
 	@DELETE
