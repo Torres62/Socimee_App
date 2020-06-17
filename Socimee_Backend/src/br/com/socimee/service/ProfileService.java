@@ -134,9 +134,9 @@ public class ProfileService {
 	public Response update(Profile profile) {
 		ProfileController controller = new ProfileController();
 		
-		boolean updatedProfile = controller.updateProfile(profile);
+		int updatedProfile = controller.updateProfile(profile);
 		
-		if(updatedProfile == false) {
+		if(updatedProfile == 0) {
 			logger.error("Error trying to update a profile description in the database");
 			return Response.status(404).entity(false).build();
 		} else {
@@ -145,13 +145,13 @@ public class ProfileService {
 	}
 	
 	
-	@Path("/delete")
+	@Path("/delete/{id}")
 	@DELETE
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Response deleteProfile(Profile profile) {
-		ProfileController controller = new ProfileController();
-		boolean isProfileDeleted = controller.deleteProfile(profile);
+	public Response deleteProfile(@PathParam("id") String id) {
+		ProfileController controller = new ProfileController();	
+		boolean isProfileDeleted = controller.deleteProfile(id);
 		
 		if(isProfileDeleted == false) {
 			logger.error("Error trying to delete a profile in the database");

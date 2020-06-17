@@ -206,7 +206,7 @@ public class ProfileDAO extends ConnectionFactory{
 		return isProfileCreated;
 	}
 	
-	public boolean updateProfile(Profile profile) {
+	public int updateProfile(Profile profile) {
 		
 		String nome = profile.getNome();
 		String sexo = profile.getSexo();
@@ -220,16 +220,17 @@ public class ProfileDAO extends ConnectionFactory{
 		String serie = profile.getSerie();
 		String anime = profile.getAnime();
 		String ocupacao = profile.getOcupacao();
-		int iduser = profile.getIdUser();
+		int idUser = profile.getIdUser();
+		int idProfile = profile.getIdProfile();
 				
-		boolean isProfileCreated = false;
+		int isProfileUpdated = 2;
 		
 		PreparedStatement pstmt = null;
 		Connection connection = createConnection();
 		try {
 			pstmt = connection.prepareStatement("UPDATE profile set Nome = ?,  Sexo = ?, DataNascimento = ?, DistanciaMaxima = ?, FaixaEtaria = ?,"
 					+ " StatusPerfil = ?, Descricao = ?, GeneroFilme = ?, GeneroMusica = ?, SerieFavorita = ?, AnimeFavorito = ?, Ocupacao = ?,"
-					+ " PerfilFacebook_idPerfilFacebook = ?, Registro_idRegistro WHERE ID_PROFILE = ?");
+					+ " PerfilFacebook_idPerfilFacebook = ?, Registro_idRegistro = ? WHERE ID_PROFILE = ?");
 			pstmt.setString(1, nome);
 			pstmt.setString(2, sexo);
 			pstmt.setString(3, dataNascimento);
@@ -243,17 +244,15 @@ public class ProfileDAO extends ConnectionFactory{
 			pstmt.setString(11, anime);
 			pstmt.setString(12, ocupacao);
 			pstmt.setInt(13, 1);
-			pstmt.setInt(14, iduser);
+			pstmt.setInt(14, idUser);
+			pstmt.setInt(15, idProfile);
 			
-			boolean execute = pstmt.execute();
-			System.out.println(execute);
-			isProfileCreated = true;
-			
+			isProfileUpdated = pstmt.executeUpdate();					
 		} catch (SQLException e) {
-			isProfileCreated = false;
+			isProfileUpdated = 0;
 			e.printStackTrace();
 		}
-		return isProfileCreated;
+		return isProfileUpdated;
 	}
 	
 	public boolean updateProfilePersonality(Profile profile) {
@@ -277,9 +276,7 @@ public class ProfileDAO extends ConnectionFactory{
 			pstmt.setString(4, anime);
 			pstmt.setInt(5, idProfile);
 			
-			int execute = pstmt.executeUpdate();
-			System.out.println(execute);
-			isProfileUpdated = true;
+			isProfileUpdated = pstmt.execute();			
 			
 		} catch (SQLException e) {
 			isProfileUpdated = false;
@@ -306,9 +303,7 @@ public class ProfileDAO extends ConnectionFactory{
 			pstmt.setString(2, ocupacao);
 			pstmt.setInt(3, idProfile);
 			
-			int execute = pstmt.executeUpdate();
-			System.out.println(execute);
-			isProfileUpdated = true;
+			isProfileUpdated = pstmt.execute();
 			
 		} catch (SQLException e) {
 			isProfileUpdated = false;
@@ -319,13 +314,15 @@ public class ProfileDAO extends ConnectionFactory{
 		return isProfileUpdated;
 	}
 	
-	public boolean delete(Profile profile) {
+	public boolean delete(String id) {
 		boolean isProfileDeleted = false;
 		PreparedStatement pstmt = null;
 		Connection connection = createConnection();
+		
+		Integer idProfile = Integer.parseInt(id);
 		try {
 			pstmt = connection.prepareStatement("DELETE FROM profile WHERE ID_PROFILE = ?");
-			pstmt.setInt(1, profile.getIdProfile());
+			pstmt.setInt(1, idProfile);
 			
 			boolean execute = pstmt.execute();
 			isProfileDeleted = true;

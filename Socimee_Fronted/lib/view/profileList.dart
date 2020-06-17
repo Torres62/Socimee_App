@@ -102,7 +102,9 @@ class SelectProfileState extends State<SelectProfile>{
   Widget _buildProfileContainer(var profile){
     return GestureDetector(
       onTap: (){
-        Navigator.pushNamed(context, '/profileSettings', arguments: profile);
+        Navigator.pushNamed(context, '/profileSettings', arguments: profile).then((value) {
+          (context as Element).reassemble();
+        });
       },
       child: Container(          
         margin: EdgeInsets.fromLTRB(60, 30, 60, 30),

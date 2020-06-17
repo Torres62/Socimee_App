@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:socimee/controller/restApi.dart';
 import 'package:socimee/utils/ColorConverter.dart';
 
 class ProfileSettings extends StatefulWidget{
@@ -11,10 +12,22 @@ class ProfileSettingsState extends State<ProfileSettings>{
   var profile;
   final formKey = GlobalKey<FormState>();
 
+  var urlToDeleteProfile = 'http://192.168.0.178:8084/Socimee/socimee/profile/delete/';
+  var urlToUpdateProfile = 'http://192.168.0.178:8084/Socimee/socimee/profile/update';
+
+  void rebuildAllChildren(BuildContext context) {
+  void rebuild(Element el) {
+    el.markNeedsBuild();
+    el.visitChildren(rebuild);
+  }
+  (context as Element).visitChildren(rebuild);
+}
+
   @override
   Widget build(BuildContext context) {
     profile = ModalRoute.of(context).settings.arguments;
 
+    rebuildAllChildren(context);
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildProfileSettingsList(),
@@ -98,6 +111,7 @@ class ProfileSettingsState extends State<ProfileSettings>{
           if(label == 'Age Range') profile['faixaEtaria'] = value;
           if(label == 'Profile Status') profile['statusPerfil'] = value;
           if(label == 'Favorite Movie') profile['filme'] = value;
+          if(label == 'Favorite Music') profile['musica'] = value;
           if(label == 'Favorite TV Show') profile['serie'] = value;
           if(label == 'Favorite Anime') profile['anime'] = value;
           if(label == 'Occupation') profile['ocupacao'] = value;
@@ -113,7 +127,9 @@ class ProfileSettingsState extends State<ProfileSettings>{
       child: Container(
         height: 50,
         child: RaisedButton(
-          onPressed: null,
+          onPressed: (){
+            _validateAndSaveProfile();
+          },
           padding: EdgeInsets.all(0),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80)),
           child: Ink(
@@ -150,7 +166,9 @@ class ProfileSettingsState extends State<ProfileSettings>{
       child: Container(
         height: 50,
         child: RaisedButton(
-          onPressed: null,
+          onPressed: (){
+            _deleteProfile();
+          },
           padding: EdgeInsets.all(0),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80)),
           child: Ink(
@@ -172,5 +190,22 @@ class ProfileSettingsState extends State<ProfileSettings>{
         ),
       ),
     );   
+  }
+
+  void _validateAndSaveProfile() async{
+    final form = formKey.currentState;
+    if(form.validate()){
+      form.save();
+      await HttpRequest().doPut(urlToUpdateProfile, profile).then((String isProfileUpdated) {
+        Navigator.pop(context);
+      });
+    }
+  }
+
+  void _deleteProfile() async{
+    urlToDeleteProfile = urlToDeleteProfile + profile['idProfile'].toString();
+    await HttpRequest().doDelete(urlToDeleteProfile).then((String isProfileDeleted){
+      Navigator.pop(context);
+    });
   }
 }

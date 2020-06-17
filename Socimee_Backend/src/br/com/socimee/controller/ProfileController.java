@@ -40,14 +40,14 @@ public class ProfileController {
 		return new ProfileDAO().updateProfileDescription(profile);
 	}
 	
-	public boolean updateProfile(Profile profile) {
+	public int updateProfile(Profile profile) {
 		System.out.println("Update profile with id: " + profile.getIdProfile());
 		return new ProfileDAO().updateProfile(profile);
 	}
 	
-	public boolean deleteProfile(Profile profile) {
-		System.out.println("Delete profile with id: " + profile.getIdProfile());
-		return new ProfileDAO().delete(profile);
+	public boolean deleteProfile(String id) {
+		System.out.println("Delete profile with id: " + id);
+		return new ProfileDAO().delete(id);
 	}
 
 	public Profile searchLastCreatedID() {
