@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:socimee/controller/restApi.dart';
 import 'package:socimee/utils/ColorConverter.dart';
+import 'package:socimee/view/profileList.dart';
 
 class ProfileDescription extends StatefulWidget{
   @override

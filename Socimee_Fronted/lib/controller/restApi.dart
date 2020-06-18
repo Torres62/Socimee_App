@@ -25,6 +25,7 @@ class HttpRequest{
   }
 
   Future doGetUserProfiles(String url) async{
+    print(url);
     var response = await get(url, headers: headers);
     var data = json.decode(response.body);
     return data;

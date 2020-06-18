@@ -14,11 +14,12 @@ class SelectProfileState extends State<SelectProfile>{
   StreamController _profilesController;
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  String url = "http://192.168.0.178:8084/Socimee/socimee/profile/readUserProfiles/";
+  String teste;
+  var url;
 
   loadProfiles() async{
     await HttpRequest().getLogin().then((String idUser){
-      url = url + idUser;
+      url = "http://192.168.0.178:8084/Socimee/socimee/profile/readUserProfiles/" + idUser;
     });
     await HttpRequest().doGetUserProfiles(url).then((res){      
       _profilesController.add(res);
@@ -103,7 +104,9 @@ class SelectProfileState extends State<SelectProfile>{
     return GestureDetector(
       onTap: (){
         Navigator.pushNamed(context, '/profileSettings', arguments: profile).then((value) {
-          (context as Element).reassemble();
+          setState(() {
+            loadProfiles();            
+          });
         });
       },
       child: Container(          
@@ -136,7 +139,13 @@ class SelectProfileState extends State<SelectProfile>{
 
   Widget _buildAddProfileButton(){
     return FloatingActionButton(
-      onPressed: (){},
+      onPressed: (){
+        Navigator.pushNamed(context, '/createNewProfile').then((value) { 
+          setState(() {
+            loadProfiles();
+          });          
+        });
+      },
       backgroundColor: ColorConverter().backgroundSecondColor(),
       child: Icon(
         Icons.add,

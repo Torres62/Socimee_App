@@ -2,23 +2,57 @@ import 'package:flutter/material.dart';
 import 'package:socimee/controller/restApi.dart';
 import 'package:socimee/utils/ColorConverter.dart';
 
-class ProfileSettings extends StatefulWidget{
+class CreateNewProfile extends StatefulWidget{
   @override
-  State<StatefulWidget> createState() => ProfileSettingsState();
+  State<StatefulWidget> createState() => CreateNewProfileState();
 }
 
-class ProfileSettingsState extends State<ProfileSettings>{
+class CreateNewProfileState extends State<CreateNewProfile>{
 
-  var profile;
+  String userID;
+  Map<String, dynamic> profile;
   final formKey = GlobalKey<FormState>();
 
-  var urlToDeleteProfile = 'http://192.168.0.178:8084/Socimee/socimee/profile/delete/';
-  var urlToUpdateProfile = 'http://192.168.0.178:8084/Socimee/socimee/profile/update';
+  var urlToCreateProfile = 'http://192.168.0.178:8084/Socimee/socimee/profile/create';
+
+  void _getUserID() async{
+    await HttpRequest().getLogin().then((String id){
+      this.userID = id;
+    });
+    profile = {
+      "nome": "", 
+      "sexo": "",
+      "dataNascimento": "",
+      "distanciaMaxima": "",
+      "faixaEtaria": "",
+      "statusPerfil": "",
+      "descricao": "",
+      "filme": "",
+      "musica": "",
+      "serie": "",
+      "anime": "",
+      "ocupacao": "",
+      "idPerfilFacebook": 1,
+      "idUser": ""
+    };
+  }
+
+  void _validateAndSaveProfile() async{
+    final form = formKey.currentState;
+    if(form.validate()){
+      form.save();
+      profile["idUser"] = userID;
+      await HttpRequest().doCreate(urlToCreateProfile, profile).then((String isProfileCreated) {
+        if(isProfileCreated == 'true'){
+          Navigator.pop(context);
+        }        
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    profile = ModalRoute.of(context).settings.arguments;
-
+    _getUserID();
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildProfileSettingsList(),
@@ -27,7 +61,7 @@ class ProfileSettingsState extends State<ProfileSettings>{
 
   Widget _buildAppBar(){
     return AppBar(
-      title: Text('${profile["nome"]} Profile'),  
+      title: Text('New Profile'),  
       centerTitle: true,
       flexibleSpace: Container(
         decoration: BoxDecoration(
@@ -53,20 +87,19 @@ class ProfileSettingsState extends State<ProfileSettings>{
           child: Expanded(
             child: ListView(
               children: <Widget>[
-                _buildFormTextField('Name can\'t be empty', profile['nome'], 'Name'),
-                _buildFormTextField('Sex can\'t be empty', profile['sexo'], 'Sex'),
-                _buildFormTextField('Birth Date can\'t be empty', profile['dataNascimento'], 'Birth Date'),
-                _buildFormTextField('Max Distance Date can\'t be empty', profile['distanciaMaxima'].toString(), 'Max Distance'),
-                _buildFormTextField('Age Range Date can\'t be empty', profile['faixaEtaria'].toString(), 'Age Range'),
-                _buildFormTextField('Profile status can\'t be empty', profile['statusPerfil'], 'Profile Status'),
-                _buildFormTextField('Favorite Movie can\'t be empty', profile['filme'], 'Favorite Movie'),
-                _buildFormTextField('Favorite Music can\'t be empty', profile['musica'], 'Favorite Music'),
-                _buildFormTextField('Favorite TV Show can\'t be empty', profile['serie'], 'Favorite TV Show'),
-                _buildFormTextField('Favorite Anime can\'t be empty', profile['anime'], 'Favorite Anime'),
-                _buildFormTextField('Occupation can\'t be empty', profile['ocupacao'], 'Occupation'),
-                _buildFormTextField('Description can\'t be empty', profile['descricao'], 'Description'),
-                _buildUpdateAccountButton(),
-                _buildDeleteAccountButton(),
+                _buildFormTextField('Name can\'t be empty', 'Name'),
+                _buildFormTextField('Sex can\'t be empty', 'Sex'),
+                _buildFormTextField('Birth Date can\'t be empty', 'Birth Date'),
+                _buildFormTextField('Max Distance Date can\'t be empty', 'Max Distance'),
+                _buildFormTextField('Age Range Date can\'t be empty', 'Age Range'),
+                _buildFormTextField('Profile status can\'t be empty', 'Profile Status'),
+                _buildFormTextField('Favorite Movie can\'t be empty', 'Favorite Movie'),
+                _buildFormTextField('Favorite Music can\'t be empty', 'Favorite Music'),
+                _buildFormTextField('Favorite TV Show can\'t be empty', 'Favorite TV Show'),
+                _buildFormTextField('Favorite Anime can\'t be empty', 'Favorite Anime'),
+                _buildFormTextField('Occupation can\'t be empty', 'Occupation'),
+                _buildFormTextField('Description can\'t be empty', 'Description'),
+                _buildCreateAccountButton(),
               ],
             ),
           )
@@ -75,11 +108,10 @@ class ProfileSettingsState extends State<ProfileSettings>{
     );
   }
 
-  Widget _buildFormTextField(String error, String initialValue, String label){ 
+  Widget _buildFormTextField(String error, String label){ 
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 5, 0, 32),
-      child: TextFormField(
-        initialValue: initialValue,
+      child: TextFormField(        
         style: TextStyle(color: Colors.black),
         decoration: InputDecoration(
           labelText: label,
@@ -112,14 +144,15 @@ class ProfileSettingsState extends State<ProfileSettings>{
     );
   }
 
-  Widget _buildUpdateAccountButton(){
+  Widget _buildCreateAccountButton(){
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 24, 0, 0),
+      padding: const EdgeInsets.fromLTRB(0, 24, 0, 24),
       child: Container(
         height: 50,
         child: RaisedButton(
           onPressed: (){
-            _validateAndSaveProfile();
+            //_validateAndSaveProfile();
+            print(this.userID);
           },
           padding: EdgeInsets.all(0),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80)),
@@ -151,52 +184,4 @@ class ProfileSettingsState extends State<ProfileSettings>{
     );   
   }
 
-  Widget _buildDeleteAccountButton(){
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 24, 0, 24),
-      child: Container(
-        height: 50,
-        child: RaisedButton(
-          onPressed: (){
-            _deleteProfile();
-          },
-          padding: EdgeInsets.all(0),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80)),
-          child: Ink(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(32),
-              color: Colors.red              
-            ),
-            child: Container(                          
-              alignment: Alignment.center,
-              child: Text(
-                'Delete Profile',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );   
-  }
-
-  void _validateAndSaveProfile() async{
-    final form = formKey.currentState;
-    if(form.validate()){
-      form.save();
-      await HttpRequest().doPut(urlToUpdateProfile, profile).then((String isProfileUpdated) {
-        
-      });
-    }
-  }
-
-  void _deleteProfile() async{
-    urlToDeleteProfile = urlToDeleteProfile + profile['idProfile'].toString();
-    await HttpRequest().doDelete(urlToDeleteProfile).then((String isProfileDeleted){
-      
-    });
-  }
 }
