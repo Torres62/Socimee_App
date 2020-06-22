@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:socimee/controller/restApi.dart';
 import 'package:socimee/utils/ColorConverter.dart';
@@ -10,7 +12,12 @@ class CreateNewProfile extends StatefulWidget{
 class CreateNewProfileState extends State<CreateNewProfile>{
 
   String userID;
+
   Map<String, dynamic> profile;
+
+  double faixaEtaria = 0.0;
+  double distanciaMaxima = 0.0;
+
   final formKey = GlobalKey<FormState>();
 
   var urlToCreateProfile = 'http://192.168.0.178:8084/Socimee/socimee/profile/create';
@@ -42,6 +49,15 @@ class CreateNewProfileState extends State<CreateNewProfile>{
     if(form.validate()){
       form.save();
       profile["idUser"] = userID;
+
+      //Parse do double para int para string
+      int faixaInt = faixaEtaria.toInt();
+      profile["faixaEtaria"] = faixaInt.toString();
+      
+      int distanciaInt = distanciaMaxima.toInt();
+      profile['distanciaMaxima'] = distanciaInt.toString();
+
+
       await HttpRequest().doCreate(urlToCreateProfile, profile).then((String isProfileCreated) {
         if(isProfileCreated == 'true'){
           Navigator.pop(context);
@@ -90,8 +106,20 @@ class CreateNewProfileState extends State<CreateNewProfile>{
                 _buildFormTextField('Name can\'t be empty', 'Name'),
                 _buildFormTextField('Sex can\'t be empty', 'Sex'),
                 _buildFormTextField('Birth Date can\'t be empty', 'Birth Date'),
-                _buildFormTextField('Max Distance Date can\'t be empty', 'Max Distance'),
-                _buildFormTextField('Age Range Date can\'t be empty', 'Age Range'),
+                Text(
+                  'Max Distance',
+                  style: TextStyle(
+                    color: ColorConverter().backgroundFirstColor()
+                  )
+                ),
+                _buildMaxDistance(),
+                Text(
+                  'Age Range',
+                  style: TextStyle(
+                    color: ColorConverter().backgroundFirstColor()
+                  )
+                ),
+                _buildAgeRangeSlider(),
                 _buildFormTextField('Profile status can\'t be empty', 'Profile Status'),
                 _buildFormTextField('Favorite Movie can\'t be empty', 'Favorite Movie'),
                 _buildFormTextField('Favorite Music can\'t be empty', 'Favorite Music'),
@@ -104,6 +132,80 @@ class CreateNewProfileState extends State<CreateNewProfile>{
             ),
           )
         ),
+      ),
+    );
+  }
+
+  Widget _buildMaxDistance(){
+  return SliderTheme(
+      data: SliderTheme.of(context).copyWith(
+        activeTrackColor: ColorConverter().backgroundFirstColor(),
+        inactiveTrackColor: ColorConverter().backgroundFirstColor().withOpacity(0.5),
+        trackShape: RoundedRectSliderTrackShape(),
+        trackHeight: 4.0,
+        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
+        thumbColor: ColorConverter().backgroundFirstColor(),
+        overlayColor: ColorConverter().backgroundFirstColor(),
+        overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
+        tickMarkShape: RoundSliderTickMarkShape(),
+        activeTickMarkColor: ColorConverter().backgroundSecondColor(),
+        inactiveTickMarkColor: ColorConverter().backgroundSecondColor().withOpacity(0.5),
+        valueIndicatorShape: PaddleSliderValueIndicatorShape(),
+        valueIndicatorColor: ColorConverter().backgroundSecondColor(),
+        valueIndicatorTextStyle: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      child: Slider(
+        value: distanciaMaxima,
+        min: 0,
+        max: 100,
+        divisions: 20,
+        label: '$distanciaMaxima',
+        onChanged: (value) {
+          setState(
+            () {
+              distanciaMaxima = value;
+            },
+          );
+        },
+      ),
+    );  
+  }
+
+  Widget _buildAgeRangeSlider(){
+    return SliderTheme(
+      data: SliderTheme.of(context).copyWith(
+        activeTrackColor: ColorConverter().backgroundFirstColor(),
+        inactiveTrackColor: ColorConverter().backgroundFirstColor().withOpacity(0.5),
+        trackShape: RoundedRectSliderTrackShape(),
+        trackHeight: 4.0,
+        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
+        thumbColor: ColorConverter().backgroundFirstColor(),
+        overlayColor: ColorConverter().backgroundFirstColor(),
+        overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
+        tickMarkShape: RoundSliderTickMarkShape(),
+        activeTickMarkColor: ColorConverter().backgroundSecondColor(),
+        inactiveTickMarkColor: ColorConverter().backgroundSecondColor().withOpacity(0.5),
+        valueIndicatorShape: PaddleSliderValueIndicatorShape(),
+        valueIndicatorColor: ColorConverter().backgroundSecondColor(),
+        valueIndicatorTextStyle: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      child: Slider(
+        value: faixaEtaria,
+        min: 18,
+        max: 100,
+        divisions: 82,
+        label: '$faixaEtaria',
+        onChanged: (value) {
+          setState(
+            () {
+              faixaEtaria = value;
+            },
+          );
+        },
       ),
     );
   }
@@ -129,9 +231,7 @@ class CreateNewProfileState extends State<CreateNewProfile>{
         onSaved: (value){
           if(label == 'Name') profile['nome'] = value;
           if(label == 'Sex') profile['sexo'] = value;
-          if(label == 'Birth Date') profile['dataNascimento'] = value;
-          if(label == 'Max Distance') profile['distanciaMaxima'] = value;
-          if(label == 'Age Range') profile['faixaEtaria'] = value;
+          if(label == 'Birth Date') profile['dataNascimento'] = value;          
           if(label == 'Profile Status') profile['statusPerfil'] = value;
           if(label == 'Favorite Movie') profile['filme'] = value;
           if(label == 'Favorite Music') profile['musica'] = value;
@@ -151,8 +251,7 @@ class CreateNewProfileState extends State<CreateNewProfile>{
         height: 50,
         child: RaisedButton(
           onPressed: (){
-            //_validateAndSaveProfile();
-            print(this.userID);
+            _validateAndSaveProfile();
           },
           padding: EdgeInsets.all(0),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80)),

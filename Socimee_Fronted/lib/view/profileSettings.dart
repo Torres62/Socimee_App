@@ -188,15 +188,86 @@ class ProfileSettingsState extends State<ProfileSettings>{
     if(form.validate()){
       form.save();
       await HttpRequest().doPut(urlToUpdateProfile, profile).then((String isProfileUpdated) {
-        
+        if(isProfileUpdated == 'true'){
+          _profileUpdated();
+        }
       });
     }
+  }
+
+  void _profileUpdated(){
+    Future.delayed(Duration(seconds: 0), (){
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context){
+          return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+            title: Text(
+              'Profile Updated', 
+              style: TextStyle(
+                color: ColorConverter().textBlueColor()
+              ),
+            ),            
+            actions: <Widget>[
+              FlatButton(
+                onPressed: (){
+                  Navigator.pop(context); 
+                },
+                child: Text(
+                  'Confirm',
+                  style: TextStyle(
+                    color: ColorConverter().textBlueColor()
+                  ),
+                )
+              ),
+            ],
+          );
+        }
+      );
+    }); 
   }
 
   void _deleteProfile() async{
     urlToDeleteProfile = urlToDeleteProfile + profile['idProfile'].toString();
     await HttpRequest().doDelete(urlToDeleteProfile).then((String isProfileDeleted){
-      
+      if(isProfileDeleted == 'true'){
+        _profileDeleted();
+      }
     });
+  }
+
+  void _profileDeleted(){
+    Future.delayed(Duration(seconds: 0), (){
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context){
+          return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+            title: Text(
+              'Profile Deleted', 
+              style: TextStyle(
+                color: ColorConverter().textBlueColor()
+              ),
+            ),            
+            actions: <Widget>[
+              FlatButton(
+                onPressed: (){
+                  Navigator.pop(context); 
+                  Navigator.pop(context); 
+                },
+                child: Text(
+                  'Confirm',
+                  style: TextStyle(
+                    color: ColorConverter().textBlueColor()
+                  ),
+                )
+              ),
+            ],
+          );
+        }
+      );
+    }); 
   }
 }
