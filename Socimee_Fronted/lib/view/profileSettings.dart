@@ -12,12 +12,21 @@ class ProfileSettingsState extends State<ProfileSettings>{
   var profile;
   final formKey = GlobalKey<FormState>();
 
+  double faixaEtaria = 0.0;
+  double distanciaMaxima = 0.0;
+
   var urlToDeleteProfile = 'http://192.168.0.178:8084/Socimee/socimee/profile/delete/';
   var urlToUpdateProfile = 'http://192.168.0.178:8084/Socimee/socimee/profile/update';
 
   @override
   Widget build(BuildContext context) {
     profile = ModalRoute.of(context).settings.arguments;
+
+    int faixaDeInicio = profile["faixaEtaria"];
+    faixaEtaria = faixaDeInicio.toDouble();
+
+    int distanciaDeInicio = profile["distanciaMaxima"];
+    distanciaMaxima = distanciaDeInicio.toDouble();
 
     return Scaffold(
       appBar: _buildAppBar(),
@@ -56,8 +65,20 @@ class ProfileSettingsState extends State<ProfileSettings>{
                 _buildFormTextField('Name can\'t be empty', profile['nome'], 'Name'),
                 _buildFormTextField('Sex can\'t be empty', profile['sexo'], 'Sex'),
                 _buildFormTextField('Birth Date can\'t be empty', profile['dataNascimento'], 'Birth Date'),
-                _buildFormTextField('Max Distance Date can\'t be empty', profile['distanciaMaxima'].toString(), 'Max Distance'),
-                _buildFormTextField('Age Range Date can\'t be empty', profile['faixaEtaria'].toString(), 'Age Range'),
+                Text(
+                  'Max Distance',
+                  style: TextStyle(
+                    color: ColorConverter().backgroundFirstColor()
+                  )
+                ),
+                _buildMaxDistance(),
+                Text(
+                  'Age Range',
+                  style: TextStyle(
+                    color: ColorConverter().backgroundFirstColor()
+                  )
+                ),
+                _buildAgeRangeSlider(),
                 _buildFormTextField('Profile status can\'t be empty', profile['statusPerfil'], 'Profile Status'),
                 _buildFormTextField('Favorite Movie can\'t be empty', profile['filme'], 'Favorite Movie'),
                 _buildFormTextField('Favorite Music can\'t be empty', profile['musica'], 'Favorite Music'),
@@ -71,6 +92,80 @@ class ProfileSettingsState extends State<ProfileSettings>{
             ),
           )
         ),
+      ),
+    );
+  }
+
+   Widget _buildMaxDistance(){
+  return SliderTheme(
+      data: SliderTheme.of(context).copyWith(
+        activeTrackColor: ColorConverter().backgroundFirstColor(),
+        inactiveTrackColor: ColorConverter().backgroundFirstColor().withOpacity(0.5),
+        trackShape: RoundedRectSliderTrackShape(),
+        trackHeight: 4.0,
+        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
+        thumbColor: ColorConverter().backgroundFirstColor(),
+        overlayColor: ColorConverter().backgroundFirstColor(),
+        overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
+        tickMarkShape: RoundSliderTickMarkShape(),
+        activeTickMarkColor: ColorConverter().backgroundSecondColor(),
+        inactiveTickMarkColor: ColorConverter().backgroundSecondColor().withOpacity(0.5),
+        valueIndicatorShape: PaddleSliderValueIndicatorShape(),
+        valueIndicatorColor: ColorConverter().backgroundSecondColor(),
+        valueIndicatorTextStyle: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      child: Slider(
+        value: distanciaMaxima,
+        min: 0,
+        max: 100,
+        divisions: 20,
+        label: '$distanciaMaxima',
+        onChanged: (value) {
+          setState(
+            () {
+              distanciaMaxima = value;
+            },
+          );
+        },
+      ),
+    );  
+  }
+
+  Widget _buildAgeRangeSlider(){
+    return SliderTheme(
+      data: SliderTheme.of(context).copyWith(
+        activeTrackColor: ColorConverter().backgroundFirstColor(),
+        inactiveTrackColor: ColorConverter().backgroundFirstColor().withOpacity(0.5),
+        trackShape: RoundedRectSliderTrackShape(),
+        trackHeight: 4.0,
+        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
+        thumbColor: ColorConverter().backgroundFirstColor(),
+        overlayColor: ColorConverter().backgroundFirstColor(),
+        overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
+        tickMarkShape: RoundSliderTickMarkShape(),
+        activeTickMarkColor: ColorConverter().backgroundSecondColor(),
+        inactiveTickMarkColor: ColorConverter().backgroundSecondColor().withOpacity(0.5),
+        valueIndicatorShape: PaddleSliderValueIndicatorShape(),
+        valueIndicatorColor: ColorConverter().backgroundSecondColor(),
+        valueIndicatorTextStyle: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      child: Slider(
+        value: faixaEtaria,
+        min: 18,
+        max: 100,
+        divisions: 82,
+        label: '$faixaEtaria',
+        onChanged: (value) {
+          setState(
+            () {
+              faixaEtaria = value;
+            },
+          );
+        },
       ),
     );
   }
@@ -98,8 +193,6 @@ class ProfileSettingsState extends State<ProfileSettings>{
           if(label == 'Name') profile['nome'] = value;
           if(label == 'Sex') profile['sexo'] = value;
           if(label == 'Birth Date') profile['dataNascimento'] = value;
-          if(label == 'Max Distance') profile['distanciaMaxima'] = value;
-          if(label == 'Age Range') profile['faixaEtaria'] = value;
           if(label == 'Profile Status') profile['statusPerfil'] = value;
           if(label == 'Favorite Movie') profile['filme'] = value;
           if(label == 'Favorite Music') profile['musica'] = value;
@@ -187,6 +280,14 @@ class ProfileSettingsState extends State<ProfileSettings>{
     final form = formKey.currentState;
     if(form.validate()){
       form.save();
+
+            //Parse do double para int para string
+      int faixaInt = faixaEtaria.toInt();
+      profile["faixaEtaria"] = faixaInt.toString();
+      
+      int distanciaInt = distanciaMaxima.toInt();
+      profile['distanciaMaxima'] = distanciaInt.toString();
+
       await HttpRequest().doPut(urlToUpdateProfile, profile).then((String isProfileUpdated) {
         if(isProfileUpdated == 'true'){
           _profileUpdated();

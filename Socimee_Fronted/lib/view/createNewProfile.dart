@@ -15,8 +15,10 @@ class CreateNewProfileState extends State<CreateNewProfile>{
 
   Map<String, dynamic> profile;
 
-  double faixaEtaria = 0.0;
+  double faixaEtaria = 18.0;
   double distanciaMaxima = 0.0;
+
+  String sex;
 
   final formKey = GlobalKey<FormState>();
 
@@ -57,9 +59,11 @@ class CreateNewProfileState extends State<CreateNewProfile>{
       int distanciaInt = distanciaMaxima.toInt();
       profile['distanciaMaxima'] = distanciaInt.toString();
 
+      //Sex to Json
+      profile['sexo'] = sex;
 
-      await HttpRequest().doCreate(urlToCreateProfile, profile).then((String isProfileCreated) {
-        if(isProfileCreated == 'true'){
+      await HttpRequest().doPost(urlToCreateProfile, profile).then((bool isProfileCreated) {
+        if(isProfileCreated){
           Navigator.pop(context);
         }        
       });
@@ -104,7 +108,7 @@ class CreateNewProfileState extends State<CreateNewProfile>{
             child: ListView(
               children: <Widget>[
                 _buildFormTextField('Name can\'t be empty', 'Name'),
-                _buildFormTextField('Sex can\'t be empty', 'Sex'),
+                _buildSexField(),
                 _buildFormTextField('Birth Date can\'t be empty', 'Birth Date'),
                 Text(
                   'Max Distance',
@@ -131,6 +135,35 @@ class CreateNewProfileState extends State<CreateNewProfile>{
               ],
             ),
           )
+        ),
+      ),
+    );
+  }
+
+   Widget _buildSexField(){
+    return Row(
+      children: <Widget>[
+        _buildSexList('Male', 'M'),
+        _buildSexList('Female', 'F'),
+      ],
+    );
+  }
+
+  Widget _buildSexList(String sexName, String sexValue){
+    return Flexible(
+      child: ListTile(
+        title: Text(sexName, style: TextStyle(color: ColorConverter().backgroundFirstColor())),
+        leading: Radio(
+          activeColor: ColorConverter().backgroundSecondColor(),
+          hoverColor: ColorConverter().backgroundSecondColor(),
+          focusColor: ColorConverter().backgroundSecondColor(),
+          value: sexValue, 
+          groupValue: sex, 
+          onChanged: (String value){
+            setState(() {
+              sex = value;
+            });
+          }
         ),
       ),
     );
@@ -270,7 +303,7 @@ class CreateNewProfileState extends State<CreateNewProfile>{
             child: Container(                          
               alignment: Alignment.center,
               child: Text(
-                'Update Profile',
+                'Create New Profile',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16

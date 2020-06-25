@@ -21,6 +21,7 @@ class SelectProfileState extends State<SelectProfile>{
     await HttpRequest().getLogin().then((String idUser){
       url = "http://192.168.0.178:8084/Socimee/socimee/profile/readUserProfiles/" + idUser;
     });
+    print(url);
     await HttpRequest().doGetUserProfiles(url).then((res){      
       _profilesController.add(res);
       return res;            
