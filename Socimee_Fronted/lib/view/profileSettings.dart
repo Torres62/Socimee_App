@@ -12,22 +12,45 @@ class ProfileSettingsState extends State<ProfileSettings>{
   var profile;
   final formKey = GlobalKey<FormState>();
 
-  double faixaEtaria = 0.0;
-  double distanciaMaxima = 0.0;
+  String sex;
+
+  bool profileStatus;
+
+  var faixaEtaria;
+  var distanciaMaxima;
 
   var urlToDeleteProfile = 'http://192.168.0.178:8084/Socimee/socimee/profile/delete/';
   var urlToUpdateProfile = 'http://192.168.0.178:8084/Socimee/socimee/profile/update';
 
+  loadMaxDistanceAndAgeRangeAndProfileStatus(){
+    if(this.faixaEtaria == null){
+      int faixaDeInicio = profile["faixaEtaria"];
+      this.faixaEtaria = faixaDeInicio.toDouble();
+    }
+    if(this.distanciaMaxima == null){
+      int distanciaDeInicio = profile["distanciaMaxima"];
+      this.distanciaMaxima = distanciaDeInicio.toDouble();
+    }   
+
+    print(profileStatus);
+
+    //Defines profile stats
+    if(profileStatus == null){
+      if (profile["statusPerfil"] == "T") {       
+        profileStatus = true;
+      } 
+      else if (profile["statusPerfil"] == "F"){
+        profileStatus = false;
+      }
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     profile = ModalRoute.of(context).settings.arguments;
-
-    int faixaDeInicio = profile["faixaEtaria"];
-    faixaEtaria = faixaDeInicio.toDouble();
-
-    int distanciaDeInicio = profile["distanciaMaxima"];
-    distanciaMaxima = distanciaDeInicio.toDouble();
-
+    loadMaxDistanceAndAgeRangeAndProfileStatus();
+      
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildProfileSettingsList(),
@@ -63,7 +86,13 @@ class ProfileSettingsState extends State<ProfileSettings>{
             child: ListView(
               children: <Widget>[
                 _buildFormTextField('Name can\'t be empty', profile['nome'], 'Name'),
-                _buildFormTextField('Sex can\'t be empty', profile['sexo'], 'Sex'),
+                Text(
+                  'Gender',
+                  style: TextStyle(
+                    color: ColorConverter().backgroundFirstColor()
+                  ),
+                ),
+                _buildSexField(),
                 _buildFormTextField('Birth Date can\'t be empty', profile['dataNascimento'], 'Birth Date'),
                 Text(
                   'Max Distance',
@@ -79,7 +108,13 @@ class ProfileSettingsState extends State<ProfileSettings>{
                   )
                 ),
                 _buildAgeRangeSlider(),
-                _buildFormTextField('Profile status can\'t be empty', profile['statusPerfil'], 'Profile Status'),
+                Text(
+                  'Profile Status',
+                  style: TextStyle(
+                    color: ColorConverter().backgroundFirstColor()
+                  )
+                ),
+                _buildStatusSwitch(),
                 _buildFormTextField('Favorite Movie can\'t be empty', profile['filme'], 'Favorite Movie'),
                 _buildFormTextField('Favorite Music can\'t be empty', profile['musica'], 'Favorite Music'),
                 _buildFormTextField('Favorite TV Show can\'t be empty', profile['serie'], 'Favorite TV Show'),
@@ -96,7 +131,53 @@ class ProfileSettingsState extends State<ProfileSettings>{
     );
   }
 
-   Widget _buildMaxDistance(){
+  Widget _buildSexField(){
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0,0,0,16),
+      child: Row(
+        children: <Widget>[
+          _buildSexMale('Male', 'M'),
+          _buildSexFemale('Female', 'F'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSexMale(String sexName, String sexValue){
+    sex = profile['sexo'];
+    return Flexible(
+      child: RadioListTile(
+        title: Text(sexName, style: TextStyle(color: ColorConverter().backgroundFirstColor())),
+        groupValue: sex,
+        value: sexValue,
+        activeColor: ColorConverter().backgroundSecondColor(),
+        onChanged: (String value){
+          setState(() {
+            sex = value;
+          });
+        },        
+      ),
+    );
+  }
+
+  Widget _buildSexFemale(String sexName, String sexValue){
+    sex = profile['sexo'];
+    return Flexible(
+      child: RadioListTile(
+        title: Text(sexName, style: TextStyle(color: ColorConverter().backgroundFirstColor())),
+        groupValue: sex,
+        value: sexValue,
+        activeColor: ColorConverter().backgroundSecondColor(),
+        onChanged: (String value){
+          setState(() {
+            sex = value;
+          });
+        },
+      ),
+    );
+  }
+
+  Widget _buildMaxDistance(){
   return SliderTheme(
       data: SliderTheme.of(context).copyWith(
         activeTrackColor: ColorConverter().backgroundFirstColor(),
@@ -117,15 +198,15 @@ class ProfileSettingsState extends State<ProfileSettings>{
         ),
       ),
       child: Slider(
-        value: distanciaMaxima,
+        value: this.distanciaMaxima,
         min: 0,
         max: 100,
         divisions: 20,
-        label: '$distanciaMaxima',
-        onChanged: (value) {
+        label: '${this.distanciaMaxima}',
+        onChanged: (double value) {
           setState(
             () {
-              distanciaMaxima = value;
+              this.distanciaMaxima = value;
             },
           );
         },
@@ -154,19 +235,34 @@ class ProfileSettingsState extends State<ProfileSettings>{
         ),
       ),
       child: Slider(
-        value: faixaEtaria,
+        value: this.faixaEtaria,
         min: 18,
         max: 100,
         divisions: 82,
-        label: '$faixaEtaria',
-        onChanged: (value) {
+        label: '${this.faixaEtaria}',
+        onChanged: (double value) {
           setState(
             () {
-              faixaEtaria = value;
+              this.faixaEtaria = value;
             },
           );
         },
       ),
+    );
+  }
+
+  Widget _buildStatusSwitch(){
+    return Row(
+      children: <Widget>[
+        Switch(            
+          value: profileStatus,           
+          onChanged: (value){
+            setState(() {
+              profileStatus = value;
+            });
+          }
+        ),
+      ],
     );
   }
 
@@ -191,9 +287,7 @@ class ProfileSettingsState extends State<ProfileSettings>{
         validator: (value) => value.isEmpty ? error : null,
         onSaved: (value){
           if(label == 'Name') profile['nome'] = value;
-          if(label == 'Sex') profile['sexo'] = value;
           if(label == 'Birth Date') profile['dataNascimento'] = value;
-          if(label == 'Profile Status') profile['statusPerfil'] = value;
           if(label == 'Favorite Movie') profile['filme'] = value;
           if(label == 'Favorite Music') profile['musica'] = value;
           if(label == 'Favorite TV Show') profile['serie'] = value;
@@ -287,6 +381,15 @@ class ProfileSettingsState extends State<ProfileSettings>{
       
       int distanciaInt = distanciaMaxima.toInt();
       profile['distanciaMaxima'] = distanciaInt.toString();
+
+      profile["sexo"] = sex;
+
+      //Defines profile stats
+      if (profileStatus) {       
+        profile["statusPerfil"] = "T";
+      } else{
+        profile["statusPerfil"] = "F";
+      }
 
       await HttpRequest().doPut(urlToUpdateProfile, profile).then((String isProfileUpdated) {
         if(isProfileUpdated == 'true'){

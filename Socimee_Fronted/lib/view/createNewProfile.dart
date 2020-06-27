@@ -20,6 +20,8 @@ class CreateNewProfileState extends State<CreateNewProfile>{
 
   String sex;
 
+  bool profileStatus = true;
+
   final formKey = GlobalKey<FormState>();
 
   var urlToCreateProfile = 'http://192.168.0.178:8084/Socimee/socimee/profile/create';
@@ -61,6 +63,13 @@ class CreateNewProfileState extends State<CreateNewProfile>{
 
       //Sex to Json
       profile['sexo'] = sex;
+
+      //Defines profile stats
+      if (profileStatus) {       
+        profile["statusPerfil"] = "T";
+      } else{
+        profile["statusPerfil"] = "F";
+      }
 
       await HttpRequest().doPost(urlToCreateProfile, profile).then((bool isProfileCreated) {
         if(isProfileCreated){
@@ -108,8 +117,14 @@ class CreateNewProfileState extends State<CreateNewProfile>{
             child: ListView(
               children: <Widget>[
                 _buildFormTextField('Name can\'t be empty', 'Name'),
-                _buildSexField(),
-                _buildFormTextField('Birth Date can\'t be empty', 'Birth Date'),
+                Text(
+                  'Gender',
+                  style: TextStyle(
+                    color: ColorConverter().backgroundFirstColor()
+                  ),
+                ),
+                _buildSexField(),              
+                _buildBirthField(),
                 Text(
                   'Max Distance',
                   style: TextStyle(
@@ -124,7 +139,13 @@ class CreateNewProfileState extends State<CreateNewProfile>{
                   )
                 ),
                 _buildAgeRangeSlider(),
-                _buildFormTextField('Profile status can\'t be empty', 'Profile Status'),
+                Text(
+                  'Profile Status',
+                  style: TextStyle(
+                    color: ColorConverter().backgroundFirstColor()
+                  )
+                ),
+                _buildStatusSwitch(),
                 _buildFormTextField('Favorite Movie can\'t be empty', 'Favorite Movie'),
                 _buildFormTextField('Favorite Music can\'t be empty', 'Favorite Music'),
                 _buildFormTextField('Favorite TV Show can\'t be empty', 'Favorite TV Show'),
@@ -138,6 +159,68 @@ class CreateNewProfileState extends State<CreateNewProfile>{
         ),
       ),
     );
+  }
+
+  Widget _buildBirthField(){
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Expanded(
+            child: TextFormField(
+              initialValue: profile['dataNascimento'],              
+              style: TextStyle(color: Colors.black),
+              decoration: InputDecoration(
+                labelText: 'Date Of Birth',
+                labelStyle: TextStyle(color: ColorConverter().backgroundFirstColor()),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(40),
+                  borderSide: BorderSide(color: ColorConverter().backgroundFirstColor())
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(40),
+                  borderSide: BorderSide(color: ColorConverter().backgroundFirstColor())
+                ), 
+              ),
+            ),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.calendar_today
+            ),
+            onPressed: (){
+              _selectDate(context);
+            },
+            color: ColorConverter().backgroundFirstColor().withOpacity(0.7),              
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<Null> _selectDate(BuildContext context) async{
+    final DateTime picked = await showDatePicker(
+      builder: (BuildContext context, Widget child){
+        return Theme(
+          data: ThemeData.dark().copyWith(            
+            primaryColor: const Color(0xFF4A5BF6),
+            accentColor: const Color(0xFF4A5BF6),
+          ), 
+          child: child
+        );
+      },
+      context: context, 
+      initialDate: DateTime(2020), 
+      firstDate: DateTime(1900), 
+      lastDate: DateTime(2020),
+    );
+
+    setState(() {
+      if(picked != null){
+        profile['dataNascimento'] = picked.toString();
+      }
+    });    
   }
 
    Widget _buildSexField(){
@@ -243,6 +326,21 @@ class CreateNewProfileState extends State<CreateNewProfile>{
     );
   }
 
+  Widget _buildStatusSwitch(){    
+    return Row(
+      children: <Widget>[
+        Switch(            
+          value: profileStatus,           
+          onChanged: (bool value){
+            setState(() {
+              profileStatus = value;
+            });                        
+          }
+        ),
+      ],
+    );
+  }
+
   Widget _buildFormTextField(String error, String label){ 
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 5, 0, 32),
@@ -264,8 +362,6 @@ class CreateNewProfileState extends State<CreateNewProfile>{
         onSaved: (value){
           if(label == 'Name') profile['nome'] = value;
           if(label == 'Sex') profile['sexo'] = value;
-          if(label == 'Birth Date') profile['dataNascimento'] = value;          
-          if(label == 'Profile Status') profile['statusPerfil'] = value;
           if(label == 'Favorite Movie') profile['filme'] = value;
           if(label == 'Favorite Music') profile['musica'] = value;
           if(label == 'Favorite TV Show') profile['serie'] = value;
