@@ -22,6 +22,10 @@ class ProfileSettingsState extends State<ProfileSettings>{
   var urlToDeleteProfile = 'http://192.168.0.178:8084/Socimee/socimee/profile/delete/';
   var urlToUpdateProfile = 'http://192.168.0.178:8084/Socimee/socimee/profile/update';
 
+  TextEditingController _controller;
+
+  DateTime birthDate;
+
   loadMaxDistanceAndAgeRangeAndProfileStatus(){
     if(this.faixaEtaria == null){
       int faixaDeInicio = profile["faixaEtaria"];
@@ -32,8 +36,6 @@ class ProfileSettingsState extends State<ProfileSettings>{
       this.distanciaMaxima = distanciaDeInicio.toDouble();
     }   
 
-    print(profileStatus);
-
     //Defines profile stats
     if(profileStatus == null){
       if (profile["statusPerfil"] == "T") {       
@@ -43,8 +45,16 @@ class ProfileSettingsState extends State<ProfileSettings>{
         profileStatus = false;
       }
     }
+
+    //Set BirthDate
+    _controller.text = profile['dataNascimento'].toString().substring(0, 10);
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _controller = new TextEditingController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +103,7 @@ class ProfileSettingsState extends State<ProfileSettings>{
                   ),
                 ),
                 _buildSexField(),
-                _buildFormTextField('Birth Date can\'t be empty', profile['dataNascimento'], 'Birth Date'),
+                _buildBirthField(),
                 Text(
                   'Max Distance',
                   style: TextStyle(
@@ -129,7 +139,7 @@ class ProfileSettingsState extends State<ProfileSettings>{
         ),
       ),
     );
-  }
+  }  
 
   Widget _buildSexField(){
     return Padding(
@@ -175,6 +185,68 @@ class ProfileSettingsState extends State<ProfileSettings>{
         },
       ),
     );
+  }
+
+  Widget _buildBirthField(){
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Expanded(
+            child: TextFormField(    
+              controller: _controller,       
+              style: TextStyle(color: Colors.black),
+              decoration: InputDecoration(
+                labelText: 'Date Of Birth',
+                labelStyle: TextStyle(color: ColorConverter().backgroundFirstColor()),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(40),
+                  borderSide: BorderSide(color: ColorConverter().backgroundFirstColor())
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(40),
+                  borderSide: BorderSide(color: ColorConverter().backgroundFirstColor())
+                ), 
+              ),
+            ),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.calendar_today
+            ),
+            onPressed: (){
+              _selectDate(context);              
+            },
+            color: ColorConverter().backgroundFirstColor().withOpacity(0.7),              
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<Null> _selectDate(BuildContext context) async{
+    final DateTime picked = await showDatePicker(
+      builder: (BuildContext context, Widget child){
+        return Theme(
+          data: ThemeData.dark().copyWith(            
+            primaryColor: const Color(0xFF4A5BF6),
+            accentColor: const Color(0xFF4A5BF6),
+          ), 
+          child: child
+        );
+      },
+      context: context, 
+      initialDate: DateTime(2020), 
+      firstDate: DateTime(1900), 
+      lastDate: DateTime(2020),
+    );
+    
+    if(picked != null){      
+      birthDate = picked;    
+      _controller.clear();
+      _controller.text = birthDate.toString().substring(0, 10);       
+    }    
   }
 
   Widget _buildMaxDistance(){
@@ -287,7 +359,6 @@ class ProfileSettingsState extends State<ProfileSettings>{
         validator: (value) => value.isEmpty ? error : null,
         onSaved: (value){
           if(label == 'Name') profile['nome'] = value;
-          if(label == 'Birth Date') profile['dataNascimento'] = value;
           if(label == 'Favorite Movie') profile['filme'] = value;
           if(label == 'Favorite Music') profile['musica'] = value;
           if(label == 'Favorite TV Show') profile['serie'] = value;
@@ -390,6 +461,9 @@ class ProfileSettingsState extends State<ProfileSettings>{
       } else{
         profile["statusPerfil"] = "F";
       }
+
+      //set Profile date of birth
+      profile['dataNascimento'] = birthDate.toString();
 
       await HttpRequest().doPut(urlToUpdateProfile, profile).then((String isProfileUpdated) {
         if(isProfileUpdated == 'true'){

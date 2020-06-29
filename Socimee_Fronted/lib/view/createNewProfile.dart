@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:socimee/controller/restApi.dart';
 import 'package:socimee/utils/ColorConverter.dart';
@@ -22,9 +20,13 @@ class CreateNewProfileState extends State<CreateNewProfile>{
 
   bool profileStatus = true;
 
+  DateTime birthDate;
+
   final formKey = GlobalKey<FormState>();
 
   var urlToCreateProfile = 'http://192.168.0.178:8084/Socimee/socimee/profile/create';
+
+  TextEditingController _controller;
 
   void _getUserID() async{
     await HttpRequest().getLogin().then((String id){
@@ -71,6 +73,9 @@ class CreateNewProfileState extends State<CreateNewProfile>{
         profile["statusPerfil"] = "F";
       }
 
+      //DataNascimento
+      profile['dataNascimento'] = birthDate.toString();
+
       await HttpRequest().doPost(urlToCreateProfile, profile).then((bool isProfileCreated) {
         if(isProfileCreated){
           Navigator.pop(context);
@@ -79,6 +84,11 @@ class CreateNewProfileState extends State<CreateNewProfile>{
     }
   }
 
+  @override
+  void initState() {    
+    super.initState();
+    _controller = new TextEditingController(text: '0');
+  }
   @override
   Widget build(BuildContext context) {
     _getUserID();
@@ -168,8 +178,8 @@ class CreateNewProfileState extends State<CreateNewProfile>{
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Expanded(
-            child: TextFormField(
-              initialValue: profile['dataNascimento'],              
+            child: TextFormField(    
+              controller: _controller,       
               style: TextStyle(color: Colors.black),
               decoration: InputDecoration(
                 labelText: 'Date Of Birth',
@@ -190,7 +200,7 @@ class CreateNewProfileState extends State<CreateNewProfile>{
               Icons.calendar_today
             ),
             onPressed: (){
-              _selectDate(context);
+              _selectDate(context);              
             },
             color: ColorConverter().backgroundFirstColor().withOpacity(0.7),              
           ),
@@ -215,12 +225,12 @@ class CreateNewProfileState extends State<CreateNewProfile>{
       firstDate: DateTime(1900), 
       lastDate: DateTime(2020),
     );
-
-    setState(() {
-      if(picked != null){
-        profile['dataNascimento'] = picked.toString();
-      }
-    });    
+    
+    if(picked != null){      
+      birthDate = picked;    
+      _controller.clear();
+      _controller.text = birthDate.toString().substring(0, 10);       
+    }    
   }
 
    Widget _buildSexField(){
