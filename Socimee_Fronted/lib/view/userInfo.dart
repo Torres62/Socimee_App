@@ -14,14 +14,14 @@ class AccountSettingsState extends State<AccountSettings>{
   bool isConfirmed = false;
   Map<String, dynamic> body;
 
-  final String url = "http://192.168.0.178:8084/Socimee/socimee/user/updateEmail";
-  String deleteUrl = "http://192.168.0.178:8084/Socimee/socimee/user/delete/";
-
+  final String url = "http://192.168.0.178:8084/Socimee/socimee/user/updateEmail";  
+  String deleteUrl;
   final formKey = GlobalKey<FormState>();
   
 
   @override
   Widget build(BuildContext context) {
+    deleteUrl = "http://192.168.0.178:8084/Socimee/socimee/user/delete/";
     return Scaffold(
       body: _buildAccountSettings(),
       appBar: _buildAppBar(),
@@ -40,13 +40,13 @@ class AccountSettingsState extends State<AccountSettings>{
 
       await HttpRequest().doPut(url, body).then((String id){
           if(id != "false"){
-            _alertProfileCreated();
+            _alertProfileUpdated();
           }
       }); 
     }
   }
 
-  void _alertProfileCreated(){
+  void _alertProfileUpdated(){
     Future.delayed(Duration(seconds: 1), (){
       showDialog(
         context: context,
@@ -305,7 +305,7 @@ class AccountSettingsState extends State<AccountSettings>{
                 )
               ),
               FlatButton(
-                onPressed: (){
+                onPressed: (){                  
                   _deleteAccount();
                 },
                 child: Text(
@@ -322,9 +322,12 @@ class AccountSettingsState extends State<AccountSettings>{
     });
   }
 
-  void _deleteAccount(){
-    deleteUrl = deleteUrl + idUser;
-    HttpRequest().doDelete(deleteUrl).then((String id){
+  void _deleteAccount() async {    
+    await HttpRequest().getLogin().then((String id){
+          idUser = id;        
+    }); 
+    deleteUrl = deleteUrl + idUser;        
+    await HttpRequest().doDelete(deleteUrl).then((String id){
       if(id != "false"){
         Navigator.of(context).pushNamed('/signHome');
       }

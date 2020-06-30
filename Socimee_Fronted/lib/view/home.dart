@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:socimee/controller/restApi.dart';
@@ -12,8 +14,9 @@ class HomeState extends State<Home>{
   String idProfile;
   String idUser;
 
-  CardController controller;
-  String cardPosition;
+  CardController controller;  
+
+  StreamController _profileController;
 
   @override
   Widget build(BuildContext context) {    
@@ -37,40 +40,49 @@ class HomeState extends State<Home>{
     return  Center(
       child: Container(
         height: MediaQuery.of(context).size.height * 0.6,
-        child: TinderSwapCard(                  
-          orientation: AmassOrientation.BOTTOM,
-          totalNum: 6,
-          stackNum: 3,
-          swipeEdge: 4.0,
-          maxWidth: MediaQuery.of(context).size.width * 1,
-          maxHeight: MediaQuery.of(context).size.width * 1,
-          minWidth: MediaQuery.of(context).size.width * 0.9,
-          minHeight: MediaQuery.of(context).size.width * 0.9,
-          cardBuilder: (context, index) {
-            return Card(
-              color: ColorConverter().textGreyColor(),
-              child: Text('Rafa'),
-            );
-          },
-          cardController: controller = CardController(),
-          swipeUpdateCallback:
-              (DragUpdateDetails details, Alignment align) {
-            /// Get swiping card's alignment
-            if (align.x < 0) {
-              //Card is LEFT swiping
-              cardPosition = 'Left';
-            } else if (align.x > 0) {
-              //Card is RIGHT swiping
-              cardPosition = 'Right';
-            }
-          },
-          swipeCompleteCallback:
-              (CardSwipeOrientation orientation, int index) {
-                print(cardPosition);
-            /// Get orientation & index of swiped card!
-          },
+        child: StreamBuilder(
+          initialData: [],
+          stream: _profileController.stream,
+          builder: (context, snapshot){
+            return _buildTinderSwapCard();
+          }
         ),
       ),
+    );
+  }
+
+  Widget _buildTinderSwapCard(){
+    return TinderSwapCard(                  
+      orientation: AmassOrientation.BOTTOM,
+      totalNum: 6,
+      stackNum: 3,
+      swipeEdge: 4.0,
+      maxWidth: MediaQuery.of(context).size.width * 1,
+      maxHeight: MediaQuery.of(context).size.width * 1,
+      minWidth: MediaQuery.of(context).size.width * 0.9,
+      minHeight: MediaQuery.of(context).size.width * 0.9,
+      cardBuilder: (context, index) {
+        return Card(
+          color: ColorConverter().textGreyColor(),
+          child: Text('Rafa'),
+        );
+      },
+      cardController: controller = CardController(),          
+      swipeCompleteCallback:
+          (CardSwipeOrientation orientation, int index) {
+            switch (orientation) {
+              case CardSwipeOrientation.LEFT:      
+                print('left');
+                break;
+              case CardSwipeOrientation.RIGHT:
+                print('right');
+                break;
+              case CardSwipeOrientation.RECOVER:
+                break;
+              default:
+                break;
+            }
+      },
     );
   }
 

@@ -110,6 +110,81 @@ public class ProfileDAO extends ConnectionFactory{
         return profiles;
     }
     
+    public ArrayList<Profile> listUsersToMatchCurrentProfile(Profile profile){
+    	
+    	String dataNascimento = profile.getDataNascimento();
+    	dataNascimento = dataNascimento.substring(0, 4);
+    	int dateOfBirth = Integer.parseInt(dataNascimento);
+    	int ageRange = 2020 - dateOfBirth;
+    	    	
+		int distanciaMaxima = profile.getDistanciaMaxima();
+		int faixaEtaria = ageRange;
+		String statusPerfil = profile.getStatusPerfil();
+		String descricao = profile.getDescricao();
+		String filme = profile.getFilme();
+		String musica = profile.getMusica();
+		String serie = profile.getSerie();
+		String anime = profile.getAnime();
+		int idUser = profile.getIdUser();
+    	
+    	
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        ArrayList<Profile> profiles = null;
+
+        connection = createConnection();
+        profiles = new ArrayList<Profile>();
+
+        try {
+            pstmt = connection.prepareStatement("SELECT * FROM Profile WHERE (Registro_idRegistro <> ? AND DistanciaMaxima <= ? AND"
+            		+ " FaixaEtaria >= ? AND StatusPerfil = ?) AND (Descricao = ? OR GeneroFilme = ? OR "
+            		+ " GeneroMusica = ? OR SerieFavorita = ? OR AnimeFavorito = ?) ORDER BY Nome");
+            
+            pstmt.setInt(1, idUser);
+            pstmt.setInt(2, distanciaMaxima);
+            pstmt.setInt(3, faixaEtaria);
+            pstmt.setString(4, statusPerfil);
+            pstmt.setString(5, descricao);
+            pstmt.setString(6, filme);
+            pstmt.setString(7, musica);
+            pstmt.setString(8, serie);
+            pstmt.setString(9, anime);
+            
+            rs = pstmt.executeQuery();
+
+            while (rs.next()){
+
+            	Profile profileToMatch = new Profile();
+
+            	profileToMatch.setIdProfile(rs.getInt("ID_PROFILE"));
+            	profileToMatch.setNome(rs.getString("Nome"));
+            	profileToMatch.setSexo(rs.getString("Sexo"));
+            	profileToMatch.setDataNascimento(rs.getString("DataNascimento"));
+            	profileToMatch.setDistanciaMaxima(rs.getInt("DistanciaMaxima"));
+            	profileToMatch.setFaixaEtaria(rs.getInt("FaixaEtaria"));
+            	profileToMatch.setStatusPerfil(rs.getString("StatusPerfil"));
+            	profileToMatch.setDescricao(rs.getString("Descricao"));
+            	profileToMatch.setFilme(rs.getString("GeneroFilme"));
+            	profileToMatch.setMusica(rs.getString("GeneroMusica"));
+            	profileToMatch.setSerie(rs.getString("SerieFavorita"));
+            	profileToMatch.setAnime(rs.getString("AnimeFavorito"));
+            	profileToMatch.setOcupacao(rs.getString("Ocupacao"));
+            	profileToMatch.setIdPerfilFacebook(rs.getInt("PerfilFacebook_idPerfilFacebook"));
+            	profileToMatch.setIdUser(rs.getInt("Registro_idRegistro"));
+
+                profiles.add(profileToMatch);
+            }
+
+        }catch (Exception e){
+            System.out.println("Error listing all clients: " + e);
+            e.printStackTrace();
+        } finally {
+            closeConnection(connection, pstmt, rs);
+        }
+        return profiles;
+    }
+    
 	public Profile getByID(long id) {
 		Connection connection = null;
 		PreparedStatement pstmt = null;
@@ -277,13 +352,14 @@ public class ProfileDAO extends ConnectionFactory{
 			pstmt.setInt(5, idProfile);
 			
 			isProfileUpdated = pstmt.execute();			
-			
+			isProfileUpdated = true;
 		} catch (SQLException e) {
 			isProfileUpdated = false;
 			e.printStackTrace();
 		} finally {
 			closeConnection(connection, pstmt, null);
 		}
+		System.out.println(isProfileUpdated);
 		return isProfileUpdated;
 	}
 	
@@ -297,14 +373,16 @@ public class ProfileDAO extends ConnectionFactory{
 		PreparedStatement pstmt = null;
 		Connection connection = createConnection();
 		try {
-			pstmt = connection.prepareStatement("UPDATE profile SET Descricao = ?, Ocupacao = ? "
-					+ " WHERE ID_PROFILE = ?");
+			pstmt = connection.prepareStatement("UPDATE profile SET Descricao = ?, Ocupacao = ?,  FaixaEtaria = ?,"
+					+ "StatusPerfil = ? WHERE ID_PROFILE = ?");
 			pstmt.setString(1, descricao);
 			pstmt.setString(2, ocupacao);
-			pstmt.setInt(3, idProfile);
+			pstmt.setInt(3, 18);
+			pstmt.setString(4, "T");
+			pstmt.setInt(5, idProfile);
 			
 			isProfileUpdated = pstmt.execute();
-			
+			isProfileUpdated = true;
 		} catch (SQLException e) {
 			isProfileUpdated = false;
 			e.printStackTrace();
@@ -364,6 +442,72 @@ public class ProfileDAO extends ConnectionFactory{
 		}
 		
 		return profile;
+	}
+	
+	public ArrayList<Profile> listProfilesToMatch(Profile profile){
+		Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        ArrayList<Profile> profiles = null;
+
+        connection = createConnection();
+        profiles = new ArrayList<Profile>();
+        
+        int idUser = profile.getIdUser();
+        int distanciaMaxima = profile.getDistanciaMaxima();
+		String descricao = profile.getDescricao();
+		String filme = profile.getFilme();
+		String musica = profile.getMusica();
+		String serie = profile.getSerie();
+		String anime = profile.getAnime();
+		String ocupacao = profile.getOcupacao(); 
+
+        try {
+            pstmt = connection.prepareStatement("SELECT * FROM Profile WHERE DistanciaMaxima = ? OR "
+            		+ "OR Descricao = ? OR GeneroFilme = ? OR GeneroMusica = ? OR SerieFavorita = ? OR "
+            		+ "AnimeFavorito = ? OR Ocupacao = ? AND Registro_idRegistro = ? ORDER BY Nome");
+            
+            pstmt.setInt(1, distanciaMaxima);
+			pstmt.setString(2, descricao);
+			pstmt.setString(3, filme);
+			pstmt.setString(4, musica);
+			pstmt.setString(5, serie);
+			pstmt.setString(6, anime);
+			pstmt.setString(7, ocupacao);
+			pstmt.setInt(8, idUser);
+			
+            rs = pstmt.executeQuery();
+
+            while (rs.next()){
+
+            	Profile profileToMatch = new Profile();
+
+            	profileToMatch.setIdProfile(rs.getInt("ID_PROFILE"));
+            	profileToMatch.setNome(rs.getString("Nome"));
+            	profileToMatch.setSexo(rs.getString("Sexo"));
+            	profileToMatch.setDataNascimento(rs.getString("DataNascimento"));
+            	profileToMatch.setDistanciaMaxima(rs.getInt("DistanciaMaxima"));
+            	profileToMatch.setFaixaEtaria(rs.getInt("FaixaEtaria"));
+            	profileToMatch.setStatusPerfil(rs.getString("StatusPerfil"));
+            	profileToMatch.setDescricao(rs.getString("Descricao"));
+            	profileToMatch.setFilme(rs.getString("GeneroFilme"));
+            	profileToMatch.setMusica(rs.getString("GeneroMusica"));
+            	profileToMatch.setSerie(rs.getString("SerieFavorita"));
+            	profileToMatch.setAnime(rs.getString("AnimeFavorito"));
+            	profileToMatch.setOcupacao(rs.getString("Ocupacao"));
+            	profileToMatch.setIdPerfilFacebook(rs.getInt("PerfilFacebook_idPerfilFacebook"));
+            	profileToMatch.setIdUser(rs.getInt("Registro_idRegistro"));
+
+                profiles.add(profileToMatch);
+            }
+
+        }catch (Exception e){
+            System.out.println("Error listing all clients: " + e);
+            e.printStackTrace();
+        } finally {
+            closeConnection(connection, pstmt, rs);
+        }
+        return profiles;
 	}
 	
 

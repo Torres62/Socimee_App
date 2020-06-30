@@ -58,6 +58,22 @@ public class ProfileService {
 		}				
 	}
 	
+	@Path("/readUsersToMatchCurrentProfile")
+	@POST
+	@Produces("application/json")
+	public Response readUsersToMatchCurrentProfile(Profile profile) {					
+		ProfileController controller = new ProfileController();
+		
+		ArrayList<Profile> profiles = controller.listUsersToMatchCurrentProfile(profile);
+		
+		if (profiles == null) {
+			logger.error("Error trying to search all profiles in the database");
+			return Response.status(404).entity(false).build();
+		} else {
+			return Response.status(200).entity(profiles).build();
+		}				
+	}
+	
 	@Path("/read")
 	@GET
 	@Consumes("application/json")

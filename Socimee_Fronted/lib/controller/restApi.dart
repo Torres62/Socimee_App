@@ -50,6 +50,11 @@ class HttpRequest{
 
     final bodyResponse = jsonDecode(response.body)['idProfile'];
 
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('idProfile');
+
+    await prefs.setString('idProfile', bodyResponse.toString());
+
     return Future<String>.value(bodyResponse.toString());
   }
 

@@ -76,8 +76,8 @@ class CreateNewProfileState extends State<CreateNewProfile>{
       //DataNascimento
       profile['dataNascimento'] = birthDate.toString();
 
-      await HttpRequest().doPost(urlToCreateProfile, profile).then((bool isProfileCreated) {
-        if(isProfileCreated){
+      await HttpRequest().doCreateProfile(urlToCreateProfile, profile).then((String isProfileCreated) {
+        if(isProfileCreated != "false"){
           Navigator.pop(context);
         }        
       });

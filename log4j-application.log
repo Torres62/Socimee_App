@@ -30,3 +30,37 @@
 2020-06-15 21:44:53 ERROR ProfileService:140 - Error trying to update a profile description in the database
 2020-06-15 21:44:54 ERROR ProfileService:140 - Error trying to update a profile description in the database
 2020-06-17 18:48:53 ERROR UserService:36 - Error trying to login a user
+2020-06-21 19:10:23 ERROR UserService:36 - Error trying to login a user
+2020-06-21 20:13:17 ERROR ProfileService:89 - Error trying to create a profile in the database
+2020-06-21 20:13:49 ERROR ProfileService:89 - Error trying to create a profile in the database
+2020-06-24 21:06:44 ERROR ProfileService:89 - Error trying to create a profile in the database
+2020-06-25 19:57:25 ERROR UserService:36 - Error trying to login a user
+2020-06-27 10:42:42 ERROR UserService:36 - Error trying to login a user
+2020-06-27 10:42:52 ERROR UserService:36 - Error trying to login a user
+2020-06-27 10:42:52 ERROR UserService:36 - Error trying to login a user
+2020-06-29 18:58:25 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:30 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:35 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:36 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:36 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:37 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:37 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:37 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:37 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:37 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:37 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:38 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:38 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:38 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:38 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:38 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:38 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:39 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:39 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:39 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:39 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 18:58:39 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 19:01:12 ERROR ProfileService:106 - Error trying to update a profile row in the database
+2020-06-29 19:09:07 ERROR UserService:36 - Error trying to login a user
+2020-06-29 19:18:17 ERROR UserService:85 - Email already exists
+2020-06-29 19:18:46 ERROR UserService:85 - Email already exists
