@@ -110,13 +110,17 @@ public class ProfileDAO extends ConnectionFactory{
         return profiles;
     }
     
-    public ArrayList<Profile> listUsersToMatchCurrentProfile(Profile profile){
+    public ArrayList<Profile> listUsersToMatchCurrentProfile(Integer id){
+    	Long idToSearch = Long.valueOf(id); 
+    	
+    	Profile profile = getByID(idToSearch);    	
     	
     	String dataNascimento = profile.getDataNascimento();
     	dataNascimento = dataNascimento.substring(0, 4);
     	int dateOfBirth = Integer.parseInt(dataNascimento);
     	int ageRange = 2020 - dateOfBirth;
     	    	
+    	int idProfile = profile.getIdProfile();
 		int distanciaMaxima = profile.getDistanciaMaxima();
 		int faixaEtaria = ageRange;
 		String statusPerfil = profile.getStatusPerfil();
@@ -125,8 +129,7 @@ public class ProfileDAO extends ConnectionFactory{
 		String musica = profile.getMusica();
 		String serie = profile.getSerie();
 		String anime = profile.getAnime();
-		int idUser = profile.getIdUser();
-    	
+		int idUser = profile.getIdUser();    	
     	
         Connection connection = null;
         PreparedStatement pstmt = null;
@@ -137,19 +140,21 @@ public class ProfileDAO extends ConnectionFactory{
         profiles = new ArrayList<Profile>();
 
         try {
-            pstmt = connection.prepareStatement("SELECT * FROM Profile WHERE (Registro_idRegistro <> ? AND DistanciaMaxima <= ? AND"
+            pstmt = connection.prepareStatement("SELECT * FROM Profile WHERE (Registro_idRegistro <> ? AND ID_PROFILE <> ?"
+            		+ " AND DistanciaMaxima <= ? AND"
             		+ " FaixaEtaria >= ? AND StatusPerfil = ?) AND (Descricao = ? OR GeneroFilme = ? OR "
             		+ " GeneroMusica = ? OR SerieFavorita = ? OR AnimeFavorito = ?) ORDER BY Nome");
             
             pstmt.setInt(1, idUser);
-            pstmt.setInt(2, distanciaMaxima);
-            pstmt.setInt(3, faixaEtaria);
-            pstmt.setString(4, statusPerfil);
-            pstmt.setString(5, descricao);
-            pstmt.setString(6, filme);
-            pstmt.setString(7, musica);
-            pstmt.setString(8, serie);
-            pstmt.setString(9, anime);
+            pstmt.setInt(2, idProfile);
+            pstmt.setInt(3, distanciaMaxima);
+            pstmt.setInt(4, faixaEtaria);
+            pstmt.setString(5, statusPerfil);
+            pstmt.setString(6, descricao);
+            pstmt.setString(7, filme);
+            pstmt.setString(8, musica);
+            pstmt.setString(9, serie);
+            pstmt.setString(10, anime);
             
             rs = pstmt.executeQuery();
 

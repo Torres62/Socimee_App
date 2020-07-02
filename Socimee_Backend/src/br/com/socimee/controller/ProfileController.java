@@ -17,9 +17,9 @@ public class ProfileController {
 		return ProfileDAO.getInstance().listUserProfiles(idUser);
 	}
 	
-	public ArrayList<Profile> listUsersToMatchCurrentProfile(Profile profile){
+	public ArrayList<Profile> listUsersToMatchCurrentProfile(Integer idUser){
 		System.out.println("Printing all profiles");
-		return ProfileDAO.getInstance().listUsersToMatchCurrentProfile(profile);
+		return ProfileDAO.getInstance().listUsersToMatchCurrentProfile(idUser);
 	}
 	
 	public Profile searchByID(long id) {

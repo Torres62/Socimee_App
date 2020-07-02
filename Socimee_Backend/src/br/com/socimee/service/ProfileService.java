@@ -58,13 +58,15 @@ public class ProfileService {
 		}				
 	}
 	
-	@Path("/readUsersToMatchCurrentProfile")
-	@POST
+	@Path("/readUsersToMatchCurrentProfile/{id}")
+	@GET
 	@Produces("application/json")
-	public Response readUsersToMatchCurrentProfile(Profile profile) {					
+	public Response readUsersToMatchCurrentProfile(@PathParam("id") String id) {					
 		ProfileController controller = new ProfileController();
 		
-		ArrayList<Profile> profiles = controller.listUsersToMatchCurrentProfile(profile);
+		int idUser = Integer.parseInt(id);	
+		
+		ArrayList<Profile> profiles = controller.listUsersToMatchCurrentProfile(idUser);
 		
 		if (profiles == null) {
 			logger.error("Error trying to search all profiles in the database");
