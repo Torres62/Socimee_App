@@ -16,7 +16,35 @@ class HomeState extends State<Home>{
 
   CardController controller;  
 
-  StreamController _profileController;
+  StreamController _profilesController;
+
+  bool isLoaded = false;
+
+  var url;
+
+  void _loadProfilesToMatch() async{
+    await HttpRequest().getProfile().then((String id) {
+      idProfile = id;
+    });
+
+    await HttpRequest().getLogin().then((String idUser){      
+      url = "http://192.168.0.178:8084/Socimee/socimee/profile/readUsersToMatchCurrentProfile/" + idProfile;      
+    });
+
+    await HttpRequest().doGetUserProfiles(url).then((res){      
+      _profilesController.add(res);            
+      return res;            
+    });   
+    isLoaded = true;
+    setState(() {});
+  }
+
+  @override
+  void initState() {  
+    _profilesController = new StreamController();
+    _loadProfilesToMatch();          
+    super.initState();    
+  }
 
   @override
   Widget build(BuildContext context) {    
@@ -37,24 +65,27 @@ class HomeState extends State<Home>{
   }
 
   Widget _buildSocimeeList(){
-    return  Center(
+    return Center(
       child: Container(
         height: MediaQuery.of(context).size.height * 0.6,
-        child: StreamBuilder(
-          initialData: [],
-          stream: _profileController.stream,
-          builder: (context, snapshot){
-            return _buildTinderSwapCard();
-          }
+        child: Expanded(
+          child: StreamBuilder(
+            initialData: [],
+            stream: _profilesController.stream,
+            builder: (context, snapshot){
+              return _buildTinderSwapCard(snapshot);
+            }
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildTinderSwapCard(){
-    return TinderSwapCard(                  
+  Widget _buildTinderSwapCard(snapshot){    
+    print(snapshot.data.length);
+    return !isLoaded ? Container(child: Center(child: CircularProgressIndicator())) : TinderSwapCard(                  
       orientation: AmassOrientation.BOTTOM,
-      totalNum: 6,
+      totalNum: snapshot.data.length,
       stackNum: 3,
       swipeEdge: 4.0,
       maxWidth: MediaQuery.of(context).size.width * 1,
@@ -62,9 +93,31 @@ class HomeState extends State<Home>{
       minWidth: MediaQuery.of(context).size.width * 0.9,
       minHeight: MediaQuery.of(context).size.width * 0.9,
       cardBuilder: (context, index) {
-        return Card(
-          color: ColorConverter().textGreyColor(),
-          child: Text('Rafa'),
+        var profile = snapshot.data[index];        
+        return Container(          
+          margin: EdgeInsets.fromLTRB(60, 30, 60, 30),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40),
+            border: Border.all(
+              color: ColorConverter().backgroundSecondColor()
+            ),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                ColorConverter().backgroundSecondColor().withOpacity(0.8),
+                ColorConverter().backgroundFirstColor().withOpacity(0.8)
+              ],
+            ),
+          ),       
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: GridTile(                                      
+              child: Text(
+                profile['nome'], 
+              ),
+            ),
+          ),
         );
       },
       cardController: controller = CardController(),          

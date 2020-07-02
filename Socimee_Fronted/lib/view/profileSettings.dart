@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socimee/controller/restApi.dart';
 import 'package:socimee/utils/ColorConverter.dart';
 
@@ -131,6 +132,7 @@ class ProfileSettingsState extends State<ProfileSettings>{
                 _buildFormTextField('Favorite Anime can\'t be empty', profile['anime'], 'Favorite Anime'),
                 _buildFormTextField('Occupation can\'t be empty', profile['ocupacao'], 'Occupation'),
                 _buildFormTextField('Description can\'t be empty', profile['descricao'], 'Description'),
+                _buildSelectProfileButton(),
                 _buildUpdateAccountButton(),
                 _buildDeleteAccountButton(),
               ],
@@ -368,6 +370,52 @@ class ProfileSettingsState extends State<ProfileSettings>{
         },
       ),
     );
+  }
+
+  void _storeProfileID() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('idProfile');
+
+    await prefs.setString('idProfile', profile['idProfile'].toString());
+  }
+
+  Widget _buildSelectProfileButton(){
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 24, 0, 0),
+      child: Container(
+        height: 50,
+        child: RaisedButton(
+          onPressed: (){
+            _storeProfileID();
+          },
+          padding: EdgeInsets.all(0),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80)),
+          child: Ink(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(32),
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  ColorConverter().backgroundFirstColor(),
+                  ColorConverter().backgroundSecondColor()
+                ]
+              ),
+            ),
+            child: Container(                          
+              alignment: Alignment.center,
+              child: Text(
+                'Select Profile',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );   
   }
 
   Widget _buildUpdateAccountButton(){

@@ -29,7 +29,7 @@ class HttpRequest{
     var data = json.decode(response.body);
     return data;
   }
-
+    
   Future<String> doCreate(String url, Map<String, dynamic> body) async{
     String jsonBody = json.encode(body);
     Response response = await post(url, headers: headers, body: jsonBody, encoding: encoding);
@@ -83,7 +83,7 @@ class HttpRequest{
     return Future<String>.value(bodyResponse.toString());
   }
 
-   Future<String> getLogin() async{
+  Future<String> getLogin() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return  Future<String>.value(prefs.getString('idLogin'));     
   }
@@ -91,6 +91,11 @@ class HttpRequest{
   Future<void> doLogout() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('idLogin');
+  }
+
+  Future<String> getProfile() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return  Future<String>.value(prefs.getString('idProfile'));     
   }
 
 }
