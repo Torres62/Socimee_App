@@ -3,6 +3,7 @@ package br.com.socimee.controller;
 import java.util.ArrayList;
 
 import br.com.socimee.dao.ProfileDAO;
+import br.com.socimee.model.Match;
 import br.com.socimee.model.Profile;
 
 public class ProfileController {
@@ -58,5 +59,10 @@ public class ProfileController {
 	public Profile searchLastCreatedID() {
 		System.out.println("Searching last created id");
 		return new ProfileDAO().searchLastCreatedID();
+	}
+	
+	public boolean createLikeOrDeny(Match match) {
+		System.out.println("Update profile with id: " + match.getIdProfile());
+		return new ProfileDAO().createLikeOrDeny(match);
 	}
 }

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import br.com.socimee.factory.ConnectionFactory;
+import br.com.socimee.model.Match;
 import br.com.socimee.model.Profile;
 
 public class ProfileDAO extends ConnectionFactory{
@@ -119,12 +120,13 @@ public class ProfileDAO extends ConnectionFactory{
     	dataNascimento = dataNascimento.substring(0, 4);
     	int dateOfBirth = Integer.parseInt(dataNascimento);
     	int ageRange = 2020 - dateOfBirth;
-    	    	
+    	System.out.println(ageRange);    	
+    	
+    	
     	int idProfile = profile.getIdProfile();
 		int distanciaMaxima = profile.getDistanciaMaxima();
 		int faixaEtaria = ageRange;
-		String statusPerfil = profile.getStatusPerfil();
-		String descricao = profile.getDescricao();
+		String statusPerfil = profile.getStatusPerfil();		
 		String filme = profile.getFilme();
 		String musica = profile.getMusica();
 		String serie = profile.getSerie();
@@ -142,19 +144,18 @@ public class ProfileDAO extends ConnectionFactory{
         try {
             pstmt = connection.prepareStatement("SELECT * FROM Profile WHERE (Registro_idRegistro <> ? AND ID_PROFILE <> ?"
             		+ " AND DistanciaMaxima <= ? AND"
-            		+ " FaixaEtaria >= ? AND StatusPerfil = ?) AND (Descricao = ? OR GeneroFilme = ? OR "
+            		+ " FaixaEtaria >= ? AND StatusPerfil = ?) AND (GeneroFilme = ? OR "
             		+ " GeneroMusica = ? OR SerieFavorita = ? OR AnimeFavorito = ?) ORDER BY Nome");
             
             pstmt.setInt(1, idUser);
             pstmt.setInt(2, idProfile);
             pstmt.setInt(3, distanciaMaxima);
             pstmt.setInt(4, faixaEtaria);
-            pstmt.setString(5, statusPerfil);
-            pstmt.setString(6, descricao);
-            pstmt.setString(7, filme);
-            pstmt.setString(8, musica);
-            pstmt.setString(9, serie);
-            pstmt.setString(10, anime);
+            pstmt.setString(5, statusPerfil);            
+            pstmt.setString(6, filme);
+            pstmt.setString(7, musica);
+            pstmt.setString(8, serie);
+            pstmt.setString(9, anime);
             
             rs = pstmt.executeQuery();
 
@@ -274,6 +275,35 @@ public class ProfileDAO extends ConnectionFactory{
 			pstmt.setString(12, ocupacao);
 			pstmt.setInt(13, idPerfilFacebook);
 			pstmt.setInt(14, iduser);
+			
+			boolean execute = pstmt.execute();
+			System.out.println(execute);
+			isProfileCreated = true;
+			
+		} catch (SQLException e) {
+			isProfileCreated = false;
+			e.printStackTrace();
+		}
+		return isProfileCreated;
+	}
+	
+	public boolean createLikeOrDeny(Match match) {					
+		boolean isProfileCreated = false;
+		
+		String likeOrDeny = match.getLikeOrDeny();
+		int idProfile = Integer.parseInt(match.getIdProfile());
+		int idProfileToMatch = Integer.parseInt(match.getIdProfileToMatch());
+		
+		PreparedStatement pstmt = null;
+		Connection connection = createConnection();
+		try {
+			pstmt = connection.prepareStatement("INSERT INTO socimee.like "
+					+ "(Like_Or_Deny, profile_ID_PROFILE, profile_ID_To_Match) VALUES (?, ?, ?);"); 
+		
+			pstmt.setString(1, likeOrDeny);
+			pstmt.setInt(2, idProfile);			
+			pstmt.setInt(3, idProfileToMatch);			
+			
 			
 			boolean execute = pstmt.execute();
 			System.out.println(execute);

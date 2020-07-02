@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 
 import br.com.socimee.controller.ProfileController;
+import br.com.socimee.model.Match;
 import br.com.socimee.model.Profile;
 
 
@@ -108,6 +109,23 @@ public class ProfileService {
 			return Response.status(404).entity(false).build();
 		} else {		
 			return Response.status(200).entity(lastCreatedProfile).build();
+		}
+	}
+	
+	@Path("/likeOrDeny")
+	@POST
+	@Consumes("application/json")
+	@Produces("application/json")
+	public Response createLikeOrDeny(Match match) {
+		ProfileController controller = new ProfileController();
+		
+		boolean isProfileCreated = controller.createLikeOrDeny(match);		
+		
+		if(isProfileCreated == false) {
+			logger.error("Error trying to create a profile in the database");			
+			return Response.status(404).entity(false).build();
+		} else {		
+			return Response.status(200).entity(isProfileCreated).build();
 		}
 	}
 	

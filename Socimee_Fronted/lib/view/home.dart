@@ -20,6 +20,8 @@ class HomeState extends State<Home>{
 
   bool isLoaded = false;
 
+  final urlToMatch = 'http://192.168.0.178:8084/Socimee/socimee/profile/likeOrDeny';
+
   var url;
 
   void _loadProfilesToMatch() async{
@@ -81,8 +83,31 @@ class HomeState extends State<Home>{
     );
   }
 
-  Widget _buildTinderSwapCard(snapshot){    
-    print(snapshot.data.length);
+  void _doDeny(String idProfileToMatch) async{  
+    Map<String, dynamic> denyJson = {
+      "likeOrDeny": "Deny",
+    	"idProfile": idProfile,
+	    "idProfileToMatch": idProfileToMatch
+    };
+
+    await HttpRequest().doPost(urlToMatch, denyJson).then((value) {
+      print('Profile was denied');
+    });
+  }
+
+  void _doLike(String idProfileToMatch) async{
+    Map<String, dynamic> likeJson = {
+      "likeOrDeny": "Like",
+    	"idProfile": idProfile,
+	    "idProfileToMatch": idProfileToMatch
+    };
+
+    await HttpRequest().doPost(urlToMatch, likeJson).then((value) {
+      print('Profile was liked');
+    });
+  }
+
+  Widget _buildTinderSwapCard(snapshot){        
     return !isLoaded ? Container(child: Center(child: CircularProgressIndicator())) : TinderSwapCard(                  
       orientation: AmassOrientation.BOTTOM,
       totalNum: snapshot.data.length,
@@ -92,6 +117,24 @@ class HomeState extends State<Home>{
       maxHeight: MediaQuery.of(context).size.width * 1,
       minWidth: MediaQuery.of(context).size.width * 0.9,
       minHeight: MediaQuery.of(context).size.width * 0.9,
+      cardController: controller = CardController(),          
+      swipeCompleteCallback:
+          (CardSwipeOrientation orientation, int index) {
+            var profile = snapshot.data[index];                
+            var idProfileToMatch = profile['idProfile'].toString();
+            switch (orientation) {
+              case CardSwipeOrientation.LEFT:      
+                _doDeny(idProfileToMatch); 
+                break;
+              case CardSwipeOrientation.RIGHT:
+                _doLike(idProfileToMatch);                
+                break;
+              case CardSwipeOrientation.RECOVER:
+                break;
+              default:
+                break;
+            }
+      },
       cardBuilder: (context, index) {
         var profile = snapshot.data[index];        
         return Container(          
@@ -119,23 +162,7 @@ class HomeState extends State<Home>{
             ),
           ),
         );
-      },
-      cardController: controller = CardController(),          
-      swipeCompleteCallback:
-          (CardSwipeOrientation orientation, int index) {
-            switch (orientation) {
-              case CardSwipeOrientation.LEFT:      
-                print('left');
-                break;
-              case CardSwipeOrientation.RIGHT:
-                print('right');
-                break;
-              case CardSwipeOrientation.RECOVER:
-                break;
-              default:
-                break;
-            }
-      },
+      },            
     );
   }
 
@@ -175,7 +202,11 @@ class HomeState extends State<Home>{
   Widget _buildAccountSettings(){
   return GestureDetector(
       onTap: (){
-        Navigator.of(context).pushNamed('/userInfo');
+        Navigator.of(context).pushNamed('/userInfo').then((value) {
+          setState(() {
+            _loadProfilesToMatch();
+          });
+        });
       },
       child: Container(
         child: ListTile(
@@ -197,7 +228,11 @@ class HomeState extends State<Home>{
   Widget _buildProfiles(){
   return GestureDetector(
       onTap: (){
-        Navigator.of(context).pushNamed('/profilesList');
+        Navigator.of(context).pushNamed('/profilesList').then((value) {
+          setState(() {
+            _loadProfilesToMatch();
+          });
+        });
       },
       child: Container(
         child: ListTile(
