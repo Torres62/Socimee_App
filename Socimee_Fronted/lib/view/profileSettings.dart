@@ -90,7 +90,7 @@ class ProfileSettingsState extends State<ProfileSettings>{
   Widget _buildProfileSettingsList(){
     return SafeArea(
       child: Container(
-        margin: EdgeInsets.all(40),
+        margin: EdgeInsets.all(30),
         child: Form(
           key: formKey,
           child: Expanded(

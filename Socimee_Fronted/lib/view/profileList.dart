@@ -110,7 +110,7 @@ class SelectProfileState extends State<SelectProfile>{
         });
       },
       child: Container(          
-        margin: EdgeInsets.fromLTRB(60, 30, 60, 30),
+        margin: EdgeInsets.fromLTRB(40, 30, 40, 30),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(40),
           border: Border.all(

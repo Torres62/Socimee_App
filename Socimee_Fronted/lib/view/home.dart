@@ -75,7 +75,16 @@ class HomeState extends State<Home>{
             initialData: [],
             stream: _profilesController.stream,
             builder: (context, snapshot){
-              return _buildTinderSwapCard(snapshot);
+              if(snapshot.data != null){
+                return _buildTinderSwapCard(snapshot);
+              } else{
+                return Text(
+                  'No profiles to match',
+                  style: TextStyle(
+                    color: Colors.black
+                  ),
+                );
+              }
             }
           ),
         ),
