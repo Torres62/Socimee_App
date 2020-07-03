@@ -148,21 +148,68 @@ class HomeState extends State<Home>{
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                ColorConverter().backgroundSecondColor().withOpacity(0.8),
-                ColorConverter().backgroundFirstColor().withOpacity(0.8)
+                ColorConverter().backgroundSecondColor(),
+                ColorConverter().backgroundFirstColor()
               ],
             ),
           ),       
+          child: _buildProfileInfo(profile),
+        );
+      },            
+    );
+  }
+
+  Widget _buildProfileInfo(profile){
+    return Stack(
+      children: <Widget>[
+        Align(
+          alignment: Alignment.topLeft,
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: GridTile(                                      
               child: Text(
-                profile['nome'], 
+                'Name: ${profile['nome']}', 
+                style: TextStyle(fontSize: 24),
               ),
             ),
           ),
-        );
-      },            
+        ),
+        _buildDatas(64.0, 'Movie: ${profile['filme']}'),
+        _buildDatas(110.0, 'Music: ${profile['musica']}'),
+        _buildDatas(156.0, 'Tv Show: ${profile['serie']}'),
+        _buildDatas(202.0, 'Anime: ${profile['anime']}'),
+        _buildDescription(166.0, 'Description: ${profile['descricao']}'),
+      ],
+    );
+  }
+
+  Widget _buildDatas(double position, String textInfo){
+    return Positioned(      
+      top: position,        
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: GridTile(                                      
+          child: Text(
+            textInfo, 
+            style: TextStyle(fontSize: 24),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDescription(double position, String textInfo){
+    return Positioned(      
+      bottom: position,        
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: GridTile(                                      
+          child: Text(
+            textInfo, 
+            style: TextStyle(fontSize: 24),
+          ),
+        ),
+      ),
     );
   }
 
